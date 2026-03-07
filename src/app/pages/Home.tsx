@@ -1,9 +1,8 @@
-import { EsOjisan, EsOjisanGreet } from '../components/EsMascots';
+import { EsOjisan } from '../components/EsMascots';
 import { GridIcon, gradientPatterns, type GradientPattern, ProductLineBadge } from '../components/GridIcon';
 import { PatternBPalette } from '../components/PatternBPalette';
 import React, { useState, useRef } from 'react';
 import { Link } from 'react-router';
-import synapseImg from 'figma:asset/7dc195601692a81362a07dbf1225fe2b9b788242.png';
 import { Heart, Users, Sparkles, Camera, Flower2, ChevronDown } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -783,7 +782,7 @@ export default function Home() {
                     transition={{ duration: 0.8, delay: 0.3 }}
                     className="flex-shrink-0"
                   >
-                    <EsOjisanGreet height={250} />
+                    <img src="/ojisan-greet.png" alt="ƐSおじさん" style={{ height: 250, width: 'auto', objectFit: 'contain' }} />
                   </motion.div>
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
@@ -792,7 +791,7 @@ export default function Home() {
                     transition={{ duration: 0.8, delay: 0.5 }}
                     className="flex-shrink-0"
                   >
-                    <EsOjisan size={115} />
+                    <img src="/ojisan.png" alt="ƐSおじさん" style={{ height: 200, width: 'auto', objectFit: 'contain' }} />
                   </motion.div>
                 </div>
               </motion.div>
@@ -902,11 +901,7 @@ export default function Home() {
                   animate={{ y: [0, -8, 0] }}
                   transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
                 >
-                  <img
-                    src={synapseImg}
-                    alt="S.Y.N.A.P.S.E"
-                    style={{ height: 280, width: 'auto', objectFit: 'contain', mixBlendMode: 'multiply' }}
-                  />
+                  <img src="/synapse.png" alt="S.Y.N.A.P.S.E" style={{ height: 280, width: 'auto', objectFit: 'contain' }} />
                 </motion.div>
                 <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-300 mt-4">S.Y.N.A.P.S.E</p>
               </motion.div>
@@ -981,7 +976,7 @@ export default function Home() {
             <motion.div variants={fadeUp} className="mt-px bg-neutral-900 p-8 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
-                  <EsOjisan size={16} />
+                  <img src="/ojisan.png" alt="ƐSおじさん" style={{ height: 40, width: 'auto', objectFit: 'contain' }} />
                 </div>
                 <div>
                   <p className="text-white text-xs tracking-wide" style={{ fontWeight: 500 }}>ƐSおじさん</p>
