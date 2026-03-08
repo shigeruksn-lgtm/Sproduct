@@ -6,11 +6,12 @@ const tabs = [
   { label: 'ƐS PV', to: '/pv' },
   { label: 'ƐS Site', to: '/showcase' },
   { label: 'System', to: '/system' },
+  // { label: 'Mascot', to: '/mascot' },
 ];
 
 export default function RootLayout() {
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif' }}>
+    <div style={{ fontFamily: 'DM Sans, sans-serif', position: 'relative' }}>
       {/* ===== Global Tab Nav ===== */}
       <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 h-14 bg-white/80 backdrop-blur-md border-b border-neutral-100">
         {/* Logo */}
@@ -51,7 +52,7 @@ export default function RootLayout() {
       </header>
 
       {/* Page content */}
-      <div className="pt-14">
+      <div className="pt-14" style={{ position: 'relative' }}>
         <Outlet />
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { EsOjisan } from '../components/EsMascots';
 import { GridIcon } from '../components/GridIcon';
 
 export default function NotFound() {
@@ -15,15 +14,6 @@ export default function NotFound() {
         transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="flex flex-col items-center text-center"
       >
-        {/* ƐSおじさん 謝罪ポーズ */}
-        <motion.div
-          animate={{ rotate: [0, -1, 1, -1, 0] }}
-          transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-          className="mb-8"
-        >
-          <EsOjisan size={80} expression="sorry" />
-        </motion.div>
-
         {/* 404 */}
         <h1
           className="text-8xl tracking-tighter text-neutral-200 mb-2"

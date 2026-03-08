@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'motion/react';
 import { Link } from 'react-router';
 import { GridIcon } from '../components/GridIcon';
-import { EsOjisanGreet, EsOjisan } from '../components/EsMascots';
 import { ArrowRight, Sparkles, Zap, Globe, Layers, GitMerge } from 'lucide-react';
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
@@ -316,15 +314,6 @@ export default function PVExisting() {
                 }}
               />
             </motion.div>
-
-            {/* EsOjisanGreet — 挨拶ポーズ */}
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-              style={{ mixBlendMode: 'multiply' }}
-            >
-              <EsOjisanGreet height={320} />
-            </motion.div>
           </motion.div>
         </div>
 
@@ -599,24 +588,6 @@ export default function PVExisting() {
                 pointerEvents: 'none',
               }}
             />
-            {/* 非公認ラベル */}
-            <div
-              style={{
-                position: 'absolute', top: -8, left: '50%',
-                transform: 'translateX(-50%)',
-                padding: '3px 10px', borderRadius: 20,
-                background: 'rgba(0,0,0,0.04)',
-                border: '1px solid rgba(0,0,0,0.08)',
-                fontSize: 9, color: 'rgba(0,0,0,0.3)',
-                letterSpacing: '0.15em', whiteSpace: 'nowrap',
-                zIndex: 10,
-              }}
-            >
-              非公認キャラクター
-            </div>
-            <div style={{ mixBlendMode: 'multiply' }}>
-              <EsOjisan size={80} expression="happy" />
-            </div>
           </motion.div>
         </motion.div>
       </section>

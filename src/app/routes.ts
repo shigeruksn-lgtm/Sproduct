@@ -15,6 +15,7 @@ import PV from './pages/PV';
 import PVExisting from './pages/PVExisting';
 import MyPage from './pages/MyPage';
 import NotFound from './pages/NotFound';
+// import Mascot from './pages/Mascot';
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: Overview },
       { path: 'concept', Component: Home },
+      // { path: 'mascot', Component: Mascot },
       { path: 'pv', Component: PV },
       { path: 'pv-existing', Component: PVExisting },
       { path: 'showcase', Component: Showcase },
