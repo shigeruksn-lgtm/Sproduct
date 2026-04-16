@@ -7,15 +7,12 @@ import path from 'path';
  * 検索順:
  *   1. <root>/public/figma-assets/<hash>.<ext>
  *   2. <root>/src/imports/<hash>.<ext>
- *   3. 見つからない場合 → 透過プレースホルダー PNG の data URL を返す
+ *   3. <root>/public/<hash>.<ext>
+ *   4. 見つからない場合 → null を返して次のプラグイン（Figma Make ネイティブ）に委譲
  */
 export function figmaAssetPlugin() {
   const SCHEME = 'figma:asset/';
   const PREFIX = '\0figma-asset:';
-
-  // 透過1×1 PNG (base64)
-  const PLACEHOLDER_PNG =
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
 
   return {
     name: 'vite-plugin-figma-asset',
@@ -23,14 +20,31 @@ export function figmaAssetPlugin() {
 
     resolveId(id) {
       if (id.startsWith(SCHEME)) {
-        return PREFIX + id.slice(SCHEME.length);
+        const filename = id.slice(SCHEME.length);
+        const root = process.cwd();
+
+        const candidates = [
+          path.resolve(root, 'public', 'figma-assets', filename),
+          path.resolve(root, 'src', 'imports', filename),
+          path.resolve(root, 'public', filename),
+        ];
+
+        // ローカルにファイルがある場合だけ横取りする
+        for (const candidate of candidates) {
+          if (fs.existsSync(candidate)) {
+            return PREFIX + filename;
+          }
+        }
+
+        // ローカルにない場合は次のプラグイン（Figma Make ネイティブ）に委譲
+        return null;
       }
     },
 
     load(id) {
       if (!id.startsWith(PREFIX)) return;
 
-      const filename = id.slice(PREFIX.length); // e.g. "abc123.png"
+      const filename = id.slice(PREFIX.length);
       const root = process.cwd();
 
       const candidates = [
@@ -41,7 +55,6 @@ export function figmaAssetPlugin() {
 
       for (const candidate of candidates) {
         if (fs.existsSync(candidate)) {
-          // ファイルが存在する場合: base64 data URL として返す
           const ext = path.extname(filename).slice(1).toLowerCase();
           const mime =
             ext === 'svg' ? 'image/svg+xml' :
@@ -54,9 +67,8 @@ export function figmaAssetPlugin() {
         }
       }
 
-      // 見つからない場合: プレースホルダーを返す（ビルドエラーを防ぐ）
-      console.warn(`[figma-asset] Not found: ${filename} → using placeholder`);
-      return `export default "${PLACEHOLDER_PNG}"`;
+      // ここには到達しないはずだが念のため
+      return null;
     },
   };
 }

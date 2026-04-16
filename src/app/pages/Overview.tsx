@@ -3,6 +3,7 @@ import { GridIcon } from '../components/GridIcon';
 import { motion } from 'motion/react';
 import { ArrowRight, Check } from 'lucide-react';
 import productLinesBg from "figma:asset/55a133390aeacdc96853cc14db4d309136a5150b.png";
+import { ModeIconGlass } from '../components/ModeIconGlass';
 
 // ─── Animation variants ──────────────────────────────────
 const fadeUp = {
@@ -20,26 +21,7 @@ const textGradStyle: React.CSSProperties = {
   WebkitTextFillColor: 'transparent',
 };
 
-// ─── ModeBadge ───────────────────────────────────────────
-const borderGrads: Record<string, string> = {
-  Br: 'linear-gradient(135deg,#ff8a8a,#ef4444,#b91c1c)',
-  Gp: 'linear-gradient(135deg,#c7d2fe,#818cf8,#4f46e5)',
-  Dr: 'linear-gradient(135deg,#fed7aa,#fb923c,#ea580c)',
-  Et: 'linear-gradient(135deg,#a7f3d0,#34d399,#059669)',
-  Ph: 'linear-gradient(135deg,#bfdbfe,#60a5fa,#2563eb)',
-  Fl: 'linear-gradient(135deg,#fce7f3,#f9a8d4,#ec4899)',
-};
-const ModeBadge = ({ code, size = 28 }: { code: string; size?: number }) => {
-  const sw = Math.max(2, Math.round(size * 0.07));
-  const fs = Math.round(size * 0.3);
-  return (
-    <div style={{ width: size, height: size, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-      <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: borderGrads[code] ?? '#aaa' }} />
-      <div style={{ position: 'absolute', top: sw, left: sw, right: sw, bottom: sw, borderRadius: '50%', background: '#1e293b' }} />
-      <span style={{ fontSize: fs, color: '#fff', letterSpacing: '0.04em', fontWeight: 500, lineHeight: 1, position: 'relative', zIndex: 1 }}>{code}</span>
-    </div>
-  );
-};
+
 
 // ─── Product line colors ──────────────────────────────────
 const esGrad = 'linear-gradient(135deg,#F5C518,#D49B1A)';
@@ -427,7 +409,7 @@ export default function Overview() {
       </section>
 
       {/* ══════════════  WHAT IS  ════════════════════════════ */}
-      <section id="what" className="py-32 px-8 border-t border-neutral-100">
+      <section id="what" className="relative py-32 px-8 border-t border-neutral-100">
         <div className="max-w-4xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} variants={stagger}>
             <motion.div variants={fadeUp}>
@@ -522,7 +504,7 @@ export default function Overview() {
                   <div className="flex gap-2 flex-wrap">
                     {line.modes.map((m) => (
                       <div key={m} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-900 border border-neutral-800">
-                        <ModeBadge code={m} size={20} />
+                        <ModeIconGlass code={m} size={20} theme="dark" variant="badge" />
                         <span className="text-xs text-neutral-400">{modeLabels[m]}</span>
                       </div>
                     ))}
@@ -552,7 +534,7 @@ export default function Overview() {
       </section>
 
       {/* ══════════════  CONCEPT  ════════════════════════════ */}
-      <section className="py-32 px-8">
+      <section className="relative py-32 px-8">
         <div className="max-w-4xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} variants={stagger}>
             <motion.div variants={fadeUp}>
@@ -587,7 +569,7 @@ export default function Overview() {
       </section>
 
       {/* ══════════════  FEATURES  ═══════════════════════════ */}
-      <section className="py-32 px-8 bg-neutral-50">
+      <section className="relative py-32 px-8 bg-neutral-50">
         <div className="max-w-5xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} variants={stagger}>
             <motion.div variants={fadeUp}>
@@ -616,7 +598,7 @@ export default function Overview() {
                     <div className="flex gap-1.5 flex-wrap">
                       {l.modes.map((m) => (
                         <div key={m} title={modeLabels[m]}>
-                          <ModeBadge code={m} size={26} />
+                          <ModeIconGlass code={m} size={26} theme="light" variant="badge" />
                         </div>
                       ))}
                     </div>
@@ -629,7 +611,7 @@ export default function Overview() {
       </section>
 
       {/* ══════════════  PRICING  ════════════════════════════ */}
-      <section className="py-32 px-8">
+      <section className="relative py-32 px-8">
         <div className="max-w-4xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} variants={stagger}>
             <motion.div variants={fadeUp}>
@@ -686,7 +668,7 @@ export default function Overview() {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {Object.entries(modeLabels).map(([code, label]) => (
                   <div key={code} className="flex items-center gap-3 p-4 rounded-xl border border-neutral-100 bg-neutral-50">
-                    <ModeBadge code={code} size={30} />
+                    <ModeIconGlass code={code} size={30} theme="light" variant="badge" />
                     <div>
                       <p className="text-sm text-neutral-700" style={{ fontWeight: 500 }}>{label}</p>
                       <p className="text-xs text-neutral-400">{code} mode</p>
@@ -704,7 +686,7 @@ export default function Overview() {
       </section>
 
       {/* ══════════════  CTA  ════════════════════════════════ */}
-      <section id="contact" className="py-32 px-8 bg-neutral-950 text-white text-center">
+      <section id="contact" className="relative py-32 px-8 bg-neutral-950 text-white text-center">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-80px' }} variants={stagger}
           className="max-w-2xl mx-auto"

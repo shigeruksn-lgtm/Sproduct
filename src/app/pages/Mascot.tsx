@@ -1,182 +1,14 @@
-// 非公認マスコット キャラクター紹介ページ
-// CHARACTER CONCEPT — FOR FUN
-
-import { GridIcon } from '../components/GridIcon';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Black Silhouette Character SVGs
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** 黒シルエット版おじさん（通常立ち） */
-const OjisanStanding = ({ height = 280 }: { height?: number }) => {
-  const w = height * (100 / 270);
-  return (
-    <svg
-      width={w}
-      height={height}
-      viewBox="0 0 100 270"
-      style={{ display: 'block', overflow: 'visible' }}
-    >
-      {/* ══ HAT ══ */}
-      {/* cylinder */}
-      <rect x="22" y="0" width="56" height="58" rx="5" fill="#111" />
-      {/* highlight edge */}
-      <rect x="22" y="0" width="56" height="3" rx="2" fill="#333" />
-      {/* band */}
-      <rect x="22" y="46" width="56" height="12" fill="#222" />
-      {/* brim */}
-      <rect x="6" y="56" width="88" height="13" rx="5" fill="#111" />
-      {/* ƐS text */}
-      <text x="50" y="39" textAnchor="middle" fontSize="17" fill="#fff"
-        fontFamily="DM Sans, sans-serif" fontWeight="bold" letterSpacing="-0.5">ƐS</text>
-
-      {/* ══ HEAD ══ */}
-      {/* ears */}
-      <ellipse cx="20" cy="96" rx="5" ry="8" fill="#111" />
-      <ellipse cx="80" cy="96" rx="5" ry="8" fill="#111" />
-      {/* face */}
-      <ellipse cx="50" cy="95" rx="30" ry="27" fill="#111" />
-
-      {/* ══ GLASSES ══ (white on black) */}
-      <circle cx="36" cy="91" r="11" fill="none" stroke="#fff" strokeWidth="2.5" />
-      <circle cx="64" cy="91" r="11" fill="none" stroke="#fff" strokeWidth="2.5" />
-      {/* bridge */}
-      <line x1="47" y1="91" x2="53" y2="91" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
-      {/* temples */}
-      <line x1="19" y1="88" x2="25" y2="90" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
-      <line x1="75" y1="90" x2="81" y2="88" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
-      {/* pupils */}
-      <circle cx="36" cy="91" r="5" fill="#fff" opacity="0.15" />
-      <circle cx="64" cy="91" r="5" fill="#fff" opacity="0.15" />
-
-      {/* ══ MUSTACHE ══ */}
-      <path d="M29 110 Q40 117 50 111 Q60 117 71 110" stroke="#fff" strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.9" />
-      <path d="M29 110 Q21 104 19 97" stroke="#fff" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.9" />
-      <path d="M71 110 Q79 104 81 97" stroke="#fff" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.9" />
-
-      {/* ══ NECK ══ */}
-      <rect x="40" y="118" width="20" height="9" rx="4" fill="#111" />
-
-      {/* ══ BODY ══ */}
-      <rect x="10" y="125" width="80" height="90" rx="14" fill="#111" />
-      {/* shirt */}
-      <path d="M44 125 L50 142 L56 125" fill="#fff" opacity="0.12" />
-      {/* lapels */}
-      <path d="M44 125 L27 146 L10 135 L10 125Z" fill="#222" />
-      <path d="M56 125 L73 146 L90 135 L90 125Z" fill="#222" />
-      {/* pocket square */}
-      <path d="M24 135 L28 129 L33 135 L30 140 L24 140Z" fill="#fff" opacity="0.7" />
-      {/* buttons */}
-      <circle cx="50" cy="158" r="2.5" fill="#fff" opacity="0.4" />
-      <circle cx="50" cy="167" r="2.5" fill="#fff" opacity="0.3" />
-      <circle cx="50" cy="176" r="2.5" fill="#fff" opacity="0.2" />
-
-      {/* ══ LEFT ARM ══ */}
-      <rect x="0" y="128" width="13" height="50" rx="6" fill="#111" />
-      <ellipse cx="6" cy="183" rx="7" ry="6" fill="#111" />
-
-      {/* ══ RIGHT ARM ══ */}
-      <rect x="87" y="128" width="13" height="50" rx="6" fill="#111" />
-      <ellipse cx="94" cy="183" rx="7" ry="6" fill="#111" />
-
-      {/* ══ LEGS ══ */}
-      <rect x="14" y="210" width="28" height="45" rx="9" fill="#111" />
-      <ellipse cx="28" cy="252" rx="20" ry="8" fill="#111" />
-      <rect x="58" y="210" width="28" height="45" rx="9" fill="#111" />
-      <ellipse cx="72" cy="252" rx="20" ry="8" fill="#111" />
-
-      {/* ══ BELT ══ */}
-      <rect x="10" y="205" width="80" height="8" rx="3" fill="#000" />
-      <rect x="42" y="205" width="16" height="8" rx="2" fill="#333" />
-    </svg>
-  );
-};
-
-/** 黒シルエット版おじさん（お辞儀グリーティング） */
-const OjisanBowing = ({ height = 280 }: { height?: number }) => {
-  const w = height * (120 / 270);
-  return (
-    <svg
-      width={w}
-      height={height}
-      viewBox="-10 0 120 270"
-      style={{ display: 'block', overflow: 'visible' }}
-    >
-      {/* ══ HAT (tilted left) ══ */}
-      <g transform="rotate(-20, 50, 30)">
-        <rect x="22" y="0" width="56" height="58" rx="5" fill="#111" />
-        <rect x="22" y="0" width="56" height="3" rx="2" fill="#333" />
-        <rect x="22" y="46" width="56" height="12" fill="#222" />
-        <rect x="6" y="56" width="88" height="13" rx="5" fill="#111" />
-        <text x="50" y="39" textAnchor="middle" fontSize="17" fill="#fff"
-          fontFamily="DM Sans, sans-serif" fontWeight="bold" letterSpacing="-0.5">ƐS</text>
-      </g>
-
-      {/* ══ HEAD ══ */}
-      <ellipse cx="20" cy="96" rx="5" ry="8" fill="#111" />
-      <ellipse cx="80" cy="96" rx="5" ry="8" fill="#111" />
-      <ellipse cx="50" cy="95" rx="30" ry="27" fill="#111" />
-
-      {/* ══ GLASSES ══ */}
-      <circle cx="36" cy="91" r="11" fill="none" stroke="#fff" strokeWidth="2.5" />
-      <circle cx="64" cy="91" r="11" fill="none" stroke="#fff" strokeWidth="2.5" />
-      <line x1="47" y1="91" x2="53" y2="91" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
-      <line x1="19" y1="88" x2="25" y2="90" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
-      <line x1="75" y1="90" x2="81" y2="88" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
-
-      {/* ══ MUSTACHE ══ */}
-      <path d="M29 110 Q40 117 50 111 Q60 117 71 110" stroke="#fff" strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.9" />
-      <path d="M29 110 Q21 104 19 97" stroke="#fff" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.9" />
-      <path d="M71 110 Q79 104 81 97" stroke="#fff" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.9" />
-
-      {/* ══ NECK ══ */}
-      <rect x="40" y="118" width="20" height="9" rx="4" fill="#111" />
-
-      {/* ══ BODY (slightly leaning) ══ */}
-      <g transform="rotate(-8, 50, 180)">
-        <rect x="10" y="125" width="80" height="90" rx="14" fill="#111" />
-        <path d="M44 125 L50 142 L56 125" fill="#fff" opacity="0.12" />
-        <path d="M44 125 L27 146 L10 135 L10 125Z" fill="#222" />
-        <path d="M56 125 L73 146 L90 135 L90 125Z" fill="#222" />
-        <path d="M24 135 L28 129 L33 135 L30 140 L24 140Z" fill="#fff" opacity="0.7" />
-        <circle cx="50" cy="158" r="2.5" fill="#fff" opacity="0.4" />
-        <circle cx="50" cy="167" r="2.5" fill="#fff" opacity="0.3" />
-
-        {/* ══ LEFT ARM (raised to hat) ══ */}
-        <g transform="rotate(-60, 8, 130)">
-          <rect x="0" y="128" width="13" height="52" rx="6" fill="#111" />
-          <ellipse cx="6" cy="183" rx="7" ry="6" fill="#111" />
-        </g>
-
-        {/* ══ RIGHT ARM ══ */}
-        <rect x="87" y="128" width="13" height="50" rx="6" fill="#111" />
-        <ellipse cx="94" cy="183" rx="7" ry="6" fill="#111" />
-
-        {/* ══ LEGS ══ */}
-        <rect x="14" y="210" width="28" height="45" rx="9" fill="#111" />
-        <ellipse cx="28" cy="252" rx="20" ry="8" fill="#111" />
-        <rect x="58" y="210" width="28" height="45" rx="9" fill="#111" />
-        <ellipse cx="72" cy="252" rx="20" ry="8" fill="#111" />
-
-        {/* ══ BELT ══ */}
-        <rect x="10" y="205" width="80" height="8" rx="3" fill="#000" />
-        <rect x="42" y="205" width="16" height="8" rx="2" fill="#333" />
-      </g>
-    </svg>
-  );
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// データ
-// ─────────────────────────────────────────────────────────────────────────────
+import mascotImg from 'figma:asset/a2e64ff85bdae31ceb529d8a9380ee68327aa6e6.png';
+import mascotBW from 'figma:asset/4767d4026ad10b35afa0ffd2506b79812c6cdc38.png';
+import { Synapse01 } from '../components/Synapse01';
 
 const tags = ['温厚', '博識', 'カイゼル髭', '山高帽'];
 
 const tagColors: Record<string, { bg: string; text: string }> = {
-  温厚: { bg: '#FEF3C7', text: '#D97706' },
-  博識: { bg: '#F0F9FF', text: '#0369A1' },
+  温厚:       { bg: '#FEF3C7', text: '#D97706' },
+  博識:       { bg: '#F0F9FF', text: '#0369A1' },
   カイゼル髭: { bg: '#F5F3FF', text: '#7C3AED' },
-  山高帽: { bg: '#F0FDF4', text: '#15803D' },
+  山高帽:     { bg: '#F0FDF4', text: '#15803D' },
 };
 
 const background = [
@@ -206,120 +38,122 @@ const usageIdeas = [
   'リリースノートの解説役',
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Page
-// ─────────────────────────────────────────────────────────────────────────────
+const synapseTags = ['AI補佐', '真面目', 'ロボット', '不安そう'];
+
+const synapseTagColors: Record<string, { bg: string; text: string }> = {
+  AI補佐:     { bg: '#F0F9FF', text: '#0369A1' },
+  真面目:     { bg: '#F0FDF4', text: '#15803D' },
+  ロボット:   { bg: '#F5F3FF', text: '#7C3AED' },
+  不安そう:   { bg: '#FFF7ED', text: '#C2410C' },
+};
+
+const synapseBackground = [
+  { label: 'Name',      value: 'S.Y.N.A.P.S.E.' },
+  { label: 'Role',      value: 'AIアシスタント' },
+  { label: 'Emotion',   value: 'いつも少し不安' },
+  { label: 'Skill',     value: 'なんでも調べる' },
+  { label: 'Weakness',  value: '急かされること' },
+  { label: 'Dream',     value: 'ƐSおじさんに認めてもらう' },
+];
 
 export default function Mascot() {
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{ fontFamily: 'DM Sans, sans-serif', background: '#fff' }}
-    >
-      {/* ===== Main Content ===== */}
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-neutral-200">
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: 'DM Sans, sans-serif', background: '#ffffff' }}>
+      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
 
-        {/* ── Left Panel ── */}
-        <div className="flex flex-col p-10 md:p-16">
-          {/* Label */}
-          <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-400 mb-8">
-            Character Concept&ensp;—&ensp;For Fun
-          </p>
+        {/* ── Left ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', borderRightWidth: 1, borderRightStyle: 'solid', borderRightColor: '#e5e5e5', background: '#fafaf9' }}>
 
-          <h1 className="text-4xl md:text-5xl text-neutral-900 mb-3" style={{ fontWeight: 300 }}>
-            非公認マスコット
-          </h1>
-          <p className="text-sm text-neutral-400 mb-16">
-            たまに現れる謎のキャラクター紹介
-          </p>
+          {/* ── Left 上段：ƐSおじさん ── */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '64px 64px 48px' }}>
+            <p style={{ fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#a3a3a3', margin: '0 0 32px 0' }}>
+              Character Concept — For Fun
+            </p>
+            <h1 style={{ fontSize: 40, fontWeight: 300, color: '#171717', margin: '0 0 8px 0' }}>
+              非公認マスコット
+            </h1>
+            <p style={{ fontSize: 13, color: '#a3a3a3', margin: '0 0 40px 0' }}>
+              たまに現れる謎のキャラクター紹介
+            </p>
 
-          {/* Characters */}
-          <div className="flex items-end justify-center gap-6 flex-1">
-            <div style={{ opacity: 0.92 }}>
-              <OjisanBowing height={260} />
-            </div>
-            <div style={{ opacity: 0.95 }}>
-              <OjisanStanding height={280} />
+            {/* ƐSおじさん 画像 */}
+            <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 24 }}>
+              <img src={mascotBW} alt="ƐSおじさん モノクロ" style={{ height: 260, width: 'auto', objectFit: 'contain', mixBlendMode: 'multiply' }} />
+              <img src={mascotImg} alt="ƐSおじさん カラー" style={{ height: 260, width: 'auto', objectFit: 'contain', mixBlendMode: 'multiply' }} />
             </div>
           </div>
 
-          {/* Usage Ideas */}
-          <div className="mt-16">
-            <p className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 mb-4">
-              Usage Ideas
+          {/* ── 区切り線 ── */}
+          <div style={{ height: 1, background: '#e5e5e5', margin: '0 32px' }} />
+
+          {/* ── Left 下段：シナプスAI ── */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '48px 64px 64px' }}>
+            <p style={{ fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#a3a3a3', margin: '0 0 24px 0' }}>
+              AI Partner
             </p>
-            <ul className="space-y-2">
-              {usageIdeas.map((idea) => (
-                <li key={idea} className="text-sm text-neutral-500 flex items-center gap-2">
-                  <span className="w-1 h-1 rounded-full bg-neutral-300 flex-shrink-0" />
-                  {idea}
-                </li>
-              ))}
-            </ul>
+
+            {/* シナプス 画像 */}
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Synapse01 height={240} />
+            </div>
+
+            {/* Usage Ideas */}
+            <div style={{ marginTop: 40 }}>
+              <p style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#a3a3a3', margin: '0 0 16px 0' }}>
+                Usage Ideas
+              </p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {usageIdeas.map((idea) => (
+                  <li key={idea} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#737373' }}>
+                    <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#d4d4d4', flexShrink: 0 }} />
+                    {idea}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
-        {/* ── Right Panel ── */}
-        <div className="flex flex-col p-10 md:p-16 overflow-y-auto">
-          {/* Eyebrow */}
-          <div className="flex items-center gap-2 mb-8">
-            <GridIcon size={14} pattern="B" />
-            <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-400">
-              ƐS Product Mascot
-            </p>
-          </div>
+        {/* ── Right ── */}
+        <div style={{ padding: '64px', overflowY: 'auto', background: '#ffffff' }}>
+          <p style={{ fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#a3a3a3', margin: '0 0 32px 0' }}>
+            ƐS Product Mascot
+          </p>
 
-          <h2 className="text-3xl md:text-4xl text-neutral-900 mb-1" style={{ fontWeight: 300 }}>
+          {/* ƐSおじさん section */}
+          <h2 style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.025em', color: '#171717', margin: '0 0 4px 0' }}>
             ƐSおじさん
           </h2>
-          <p
-            className="text-xs tracking-[0.25em] uppercase mb-8"
-            style={{ color: '#E8703A' }}
-          >
+          <p style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#E8703A', margin: '0 0 24px 0' }}>
             The Gentle Navigator
           </p>
 
-          <div className="w-10 h-px bg-neutral-200 mb-8" />
+          <div style={{ width: 40, height: 1, background: '#e5e5e5', marginBottom: 24 }} />
 
-          {/* Description */}
-          <p className="text-sm text-neutral-600 mb-8" style={{ lineHeight: '2' }}>
+          <p style={{ fontSize: 13, color: '#525252', lineHeight: 2, margin: '0 0 24px 0' }}>
             婚礼・宴会・衣装・美容業界に長くいるにも関わらず、そんな詳しくない風な態度をとる。基本偉そう。でも断らない男。ノラせたらやってくれる人。愛されキャラ狙っているがあざとさが透けて見える。まだ自分が非公認キャラだとは認識していない。ボランティアでES Product Hotelのドアマンをしてくれている。
           </p>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-10">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
             {tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-3 py-1 rounded-full text-xs"
-                style={{
-                  background: tagColors[tag]?.bg ?? '#f5f5f5',
-                  color: tagColors[tag]?.text ?? '#555',
-                }}
-              >
+              <span key={tag} style={{ padding: '4px 12px', borderRadius: 9999, fontSize: 12, background: tagColors[tag]?.bg ?? '#f5f5f5', color: tagColors[tag]?.text ?? '#555' }}>
                 {tag}
               </span>
             ))}
           </div>
 
           {/* Background */}
-          <div className="mb-10">
-            <p className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 mb-5">
+          <div style={{ marginBottom: 40 }}>
+            <p style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#a3a3a3', margin: '0 0 16px 0' }}>
               Background
             </p>
-            <table className="w-full">
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <tbody>
                 {background.map(({ label, value }) => (
-                  <tr key={label} className="border-b border-neutral-100 last:border-0">
-                    <td
-                      className="py-2.5 pr-6 text-xs text-neutral-400 whitespace-nowrap align-top"
-                      style={{ width: '120px', fontWeight: 500 }}
-                    >
-                      {label}
-                    </td>
-                    <td className="py-2.5 text-sm text-neutral-700">
-                      {value}
-                    </td>
+                  <tr key={label} style={{ borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: '#f5f5f5' }}>
+                    <td style={{ padding: '10px 24px 10px 0', fontSize: 11, color: '#a3a3a3', fontWeight: 500, whiteSpace: 'nowrap', width: 130, verticalAlign: 'top' }}>{label}</td>
+                    <td style={{ padding: '10px 0', fontSize: 13, color: '#404040' }}>{value}</td>
                   </tr>
                 ))}
               </tbody>
@@ -327,60 +161,86 @@ export default function Mascot() {
           </div>
 
           {/* Design Principle */}
-          <div>
-            <p className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 mb-5">
+          <div style={{ marginBottom: 64 }}>
+            <p style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#a3a3a3', margin: '0 0 16px 0' }}>
               Design Principle
             </p>
-            <table className="w-full">
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <tbody>
                 {designPrinciples.map(({ label, value }) => (
-                  <tr key={label} className="border-b border-neutral-100 last:border-0">
-                    <td
-                      className="py-2.5 pr-6 text-xs text-neutral-800 whitespace-nowrap align-top"
-                      style={{ width: '120px', fontWeight: 600 }}
-                    >
-                      {label}
-                    </td>
-                    <td className="py-2.5 text-sm text-neutral-500">
-                      {value}
-                    </td>
+                  <tr key={label} style={{ borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: '#f5f5f5' }}>
+                    <td style={{ padding: '10px 24px 10px 0', fontSize: 11, color: '#171717', fontWeight: 600, whiteSpace: 'nowrap', width: 130, verticalAlign: 'top' }}>{label}</td>
+                    <td style={{ padding: '10px 0', fontSize: 13, color: '#737373' }}>{value}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+
+          {/* ── セクション区切り線 ── */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 48 }}>
+            <div style={{ flex: 1, height: 1, background: '#e5e5e5' }} />
+            <span style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#d4d4d4' }}>Next</span>
+            <div style={{ flex: 1, height: 1, background: '#e5e5e5' }} />
+          </div>
+
+          {/* ── シナプスAI section ── */}
+          <div>
+            <h2 style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.025em', color: '#171717', margin: '0 0 4px 0' }}>
+              シナプスAI 01
+            </h2>
+            <p style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#0369A1', margin: '0 0 24px 0' }}>
+              S.Y.N.A.P.S.E.
+            </p>
+
+            <div style={{ width: 40, height: 1, background: '#e5e5e5', marginBottom: 24 }} />
+
+            <p style={{ fontSize: 13, color: '#525252', lineHeight: 2, margin: '0 0 24px 0' }}>
+              ƐSおじさんのAIアシスタント。いつも少し不安そうな顔をしているが、仕事はきちんとこなす。胸のプレートに「S.Y.N.A.P.S.E.」と書かれているが、自分でも略語の意味をよく知らない。ƐSおじさんに「せやねん」と言ってもらえることが密かな目標。
+            </p>
+
+            {/* Synapse Tags */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
+              {synapseTags.map((tag) => (
+                <span key={tag} style={{ padding: '4px 12px', borderRadius: 9999, fontSize: 12, background: synapseTagColors[tag]?.bg ?? '#f5f5f5', color: synapseTagColors[tag]?.text ?? '#555' }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* Synapse Background */}
+            <div>
+              <p style={{ fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#a3a3a3', margin: '0 0 16px 0' }}>
+                Profile
+              </p>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <tbody>
+                  {synapseBackground.map(({ label, value }) => (
+                    <tr key={label} style={{ borderBottomWidth: 1, borderBottomStyle: 'solid', borderBottomColor: '#f5f5f5' }}>
+                      <td style={{ padding: '10px 24px 10px 0', fontSize: 11, color: '#a3a3a3', fontWeight: 500, whiteSpace: 'nowrap', width: 130, verticalAlign: 'top' }}>{label}</td>
+                      <td style={{ padding: '10px 0', fontSize: 13, color: '#404040' }}>{value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ===== Footer ===== */}
-      <footer
-        className="flex items-center justify-between px-10 py-5"
-        style={{ background: '#111' }}
-      >
-        <div className="flex items-center gap-3">
-          {/* mini standing character */}
-          <svg width="24" height="60" viewBox="0 0 100 270" style={{ display: 'block' }}>
-            <rect x="22" y="0" width="56" height="58" rx="5" fill="#fff" opacity="0.9" />
-            <rect x="6" y="56" width="88" height="13" rx="5" fill="#fff" opacity="0.9" />
-            <text x="50" y="39" textAnchor="middle" fontSize="17" fill="#111"
-              fontFamily="DM Sans, sans-serif" fontWeight="bold">ƐS</text>
-            <ellipse cx="50" cy="95" rx="30" ry="27" fill="#fff" opacity="0.9" />
-            <rect x="10" y="125" width="80" height="90" rx="14" fill="#fff" opacity="0.85" />
-            <rect x="14" y="210" width="28" height="45" rx="9" fill="#fff" opacity="0.85" />
-            <rect x="58" y="210" width="28" height="45" rx="9" fill="#fff" opacity="0.85" />
-          </svg>
+      {/* ── Footer ── */}
+      <footer style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 48px', background: '#111111' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+          <img src={mascotImg} alt="ƐSおじさん mini" style={{ height: 56, width: 'auto', objectFit: 'contain', mixBlendMode: 'luminosity' }} />
+          <Synapse01 height={56} style={{ mixBlendMode: 'luminosity' }} />
           <div>
-            <p className="text-sm text-white" style={{ fontWeight: 500 }}>ƐSおじさん</p>
-            <p className="text-[10px] text-neutral-500">The Gentle Navigator</p>
+            <p style={{ fontSize: 13, color: '#ffffff', fontWeight: 500, margin: 0 }}>ƐSおじさん & シナプスAI 01</p>
+            <p style={{ fontSize: 10, color: '#737373', margin: 0 }}>ES Product Unofficial Mascots</p>
           </div>
         </div>
-
-        <div className="flex items-center gap-3">
-          <GridIcon size={16} pattern="B" />
-          <p className="text-[10px] tracking-[0.2em] uppercase text-neutral-500">
-            ES Product Unofficial Mascot
-          </p>
-        </div>
+        <p style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#525252', margin: 0 }}>
+          ES Product Unofficial Mascot
+        </p>
       </footer>
     </div>
   );

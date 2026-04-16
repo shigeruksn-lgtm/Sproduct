@@ -6,7 +6,6 @@ const tabs = [
   { label: 'ƐS PV', to: '/pv' },
   { label: 'ƐS Site', to: '/showcase' },
   { label: 'System', to: '/system' },
-  // { label: 'Mascot', to: '/mascot' },
 ];
 
 export default function RootLayout() {

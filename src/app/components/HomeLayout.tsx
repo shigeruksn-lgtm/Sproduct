@@ -2,6 +2,7 @@ import { Outlet, NavLink, Link } from 'react-router';
 import { GridIcon, ProductLineBadge } from './GridIcon';
 import { QuickSideMenu } from './QuickSideMenu';
 import { SchedulePopup } from './SchedulePopup';
+import { WeatherModal } from './WeatherModal';
 import {
   LayoutDashboard,
   Users,
@@ -38,7 +39,7 @@ const mainMenu = [
   { icon: Building2,       label: '施設・会場管理', to: '/home/venue' },
   { icon: PartyPopper,     label: 'イベント管理',   to: '/home/event' },
   { icon: ShoppingCart,    label: '発注管理',       to: '/home/photo' },
-  { icon: BarChart3,       label: '分析管理',       to: '/home/flower' },
+  { icon: BarChart3,       label: '分析管理',       to: '/home/analytics' },
   { icon: CalendarDays,    label: 'スケジュール',   to: '/home/schedule' },
 ];
 
@@ -63,6 +64,7 @@ export default function HomeLayout() {
   const [currentMode, setCurrentMode] = useState('Br');
   const [modeOpen, setModeOpen] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [weatherModalOpen, setWeatherModalOpen] = useState(false);
   const modeRef = useRef<HTMLDivElement>(null);
 
   // Close mode picker on outside click
@@ -340,7 +342,11 @@ export default function HomeLayout() {
             </button>
             {/* Weather for Hiroo */}
             {weather && (
-              <div className="flex items-center gap-1.5 text-neutral-500">
+              <button
+                onClick={() => setWeatherModalOpen(true)}
+                className="flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 transition-colors cursor-pointer rounded-lg px-2 py-1 hover:bg-neutral-50"
+                title="30日間天気予報を表示"
+              >
                 {weather.icon === 'sun' ? (
                   <Sun className="w-4 h-4" style={{ color: '#F5C518' }} />
                 ) : (
@@ -352,7 +358,7 @@ export default function HomeLayout() {
                 <span className="text-[10px] text-neutral-400" style={{ fontWeight: 300 }}>
                   {weather.desc}
                 </span>
-              </div>
+              </button>
             )}
             {/* Login user */}
             <div className="flex flex-col items-end">
@@ -379,6 +385,9 @@ export default function HomeLayout() {
 
       {/* Schedule full-screen overlay */}
       <SchedulePopup open={scheduleOpen} onClose={() => setScheduleOpen(false)} sidebarWidth={collapsed ? 68 : 240} />
+
+      {/* Weather modal */}
+      <WeatherModal isOpen={weatherModalOpen} onClose={() => setWeatherModalOpen(false)} />
     </div>
   );
 }

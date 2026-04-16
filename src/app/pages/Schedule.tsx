@@ -247,72 +247,90 @@ const STICKY_BG_CORNER = '#FAFAFA';
 
 /**
  * Horizontal drag for Day.1 (left/right along time axis).
- * Manipulates element.style.left directly → no re-render mid-drag.
- * Commits final position via onMoveEvent on mouseup.
+ *
+ * ★ DOM-position-first approach:
+ *   Reads el.offsetLeft at drag-start as the base so this function never
+ *   relies on the render formula. If rendering changes, drag still works.
+ *   Mouse delta → rawLeft → snap to slot → commit on mouseup.
  */
 function startHorizontalDrag(
   e: React.MouseEvent,
   ev: SchedEvent,
-  slotPx: number,   // px per 10-min slot
-  hourW: number,    // px per hour
+  slotPx: number,
+  _hourW: number,
   onMoveEvent: MoveEventFn,
+  scrollEl?: HTMLElement,
 ) {
   e.preventDefault();
   e.stopPropagation();
 
-  const el = e.currentTarget as HTMLElement;
-  const startX       = e.clientX;
-  const origStartMin = ev.startHour * 60 + ev.startMin;
-  const origDurMin   = (ev.endHour * 60 + ev.endMin) - origStartMin;
-  const cfg          = EVENT_CFG[ev.type];
+  const el         = e.currentTarget as HTMLElement;
+  const cfg        = EVENT_CFG[ev.type];
+  const origDurMin = (ev.endHour * 60 + ev.endMin) - (ev.startHour * 60 + ev.startMin);
+  const durSlots   = Math.round(origDurMin / SLOT_MINUTES);
+  const maxSlot    = TOTAL_SLOTS - durSlots;
 
-  // Visual: drag start
-  el.style.zIndex    = '50';
-  el.style.opacity   = '0.88';
-  el.style.transform = 'scale(1.02)';
-  el.style.boxShadow = `0 8px 24px ${cfg.color}40`;
-  el.style.cursor    = 'grabbing';
-  el.style.transition = 'none'; // disable transition during drag
-  document.body.style.cursor = 'grabbing';
+  // ── getBoundingClientRect ベース（スティッキー要素があっても座標ズレなし）──
+  const anchorEl_h     = el.offsetParent as HTMLElement | null;
+  const scrollRect_h   = scrollEl ? scrollEl.getBoundingClientRect() : null;
+  const anchorRect_h   = anchorEl_h ? anchorEl_h.getBoundingClientRect() : null;
+  const anchorContentX = (scrollRect_h && anchorRect_h && scrollEl)
+    ? anchorRect_h.left - scrollRect_h.left + scrollEl.scrollLeft
+    : 0;
+  const grabX = e.clientX - el.getBoundingClientRect().left;
+
+  let currentSlot = Math.max(0, Math.min(maxSlot, Math.round(el.offsetLeft / slotPx)));
+  let lastMouse: MouseEvent | null = null;
+
+  el.style.zIndex     = '50';
+  el.style.opacity    = '0.88';
+  el.style.transform  = 'scale(1.02)';
+  el.style.boxShadow  = `0 8px 24px ${cfg.color}40`;
+  el.style.cursor     = 'grabbing';
+  el.style.transition = 'none';
+  document.body.style.cursor     = 'grabbing';
   document.body.style.userSelect = 'none';
 
-  let deltaSlots = 0;
-
-  const onMove = (me: MouseEvent) => {
-    const dx    = me.clientX - startX;
-    deltaSlots  = Math.round(dx / slotPx);
-
-    // Clamp: origStartMin + delta must stay within HOUR_S..HOUR_E - duration
-    const baseSMinOffset = origStartMin - HOUR_S * 60; // offset from timeline start
-    const newSMinOffset  = Math.max(0, Math.min(
-      TOTAL_SLOTS * SLOT_MINUTES - origDurMin,
-      baseSMinOffset + deltaSlots * SLOT_MINUTES,
-    ));
-    // left = (minutes_offset / 60) * hourW + 2  (the +2 matches React render)
-    el.style.left = `${(newSMinOffset / 60) * hourW + 2}px`;
+  const updatePos = (me: MouseEvent) => {
+    if (scrollEl) {
+      const mouseContentX = me.clientX - scrollEl.getBoundingClientRect().left + scrollEl.scrollLeft;
+      const targetLeft    = mouseContentX - grabX - anchorContentX;
+      currentSlot   = Math.max(0, Math.min(maxSlot, Math.round(targetLeft / slotPx)));
+    } else {
+      currentSlot   = Math.max(0, Math.min(maxSlot, Math.round((el.offsetLeft + (me.clientX - e.clientX)) / slotPx)));
+    }
+    el.style.left = `${currentSlot * slotPx}px`;
   };
+
+  const ZONE = 80; const MAX_SPEED = 12;
+  let rafId = 0;
+  const tick = () => {
+    if (scrollEl && lastMouse) {
+      const rect      = scrollEl.getBoundingClientRect();
+      const distRight = rect.right  - lastMouse.clientX;
+      const distLeft  = lastMouse.clientX - rect.left;
+      if (distRight > 0 && distRight < ZONE) {
+        scrollEl.scrollLeft += MAX_SPEED * (1 - distRight / ZONE);
+        updatePos(lastMouse);
+      } else if (distLeft > 0 && distLeft < ZONE) {
+        scrollEl.scrollLeft -= MAX_SPEED * (1 - distLeft / ZONE);
+        updatePos(lastMouse);
+      }
+    }
+    rafId = requestAnimationFrame(tick);
+  };
+  rafId = requestAnimationFrame(tick);
+
+  const onMove = (me: MouseEvent) => { lastMouse = me; updatePos(me); };
 
   const onUp = () => {
     document.removeEventListener('mousemove', onMove);
     document.removeEventListener('mouseup',   onUp);
-
-    // Reset visual overrides (React re-render will take over)
-    el.style.zIndex    = '';
-    el.style.opacity   = '';
-    el.style.transform = '';
-    el.style.boxShadow = '';
-    el.style.cursor    = '';
-    el.style.transition = '';
-    document.body.style.cursor    = '';
-    document.body.style.userSelect = '';
-
-    // Commit: calculate new absolute time
-    const baseSMinOffset = origStartMin - HOUR_S * 60;
-    const newSMinOffset  = Math.max(0, Math.min(
-      TOTAL_SLOTS * SLOT_MINUTES - origDurMin,
-      baseSMinOffset + deltaSlots * SLOT_MINUTES,
-    ));
-    const ns = HOUR_S * 60 + newSMinOffset;
+    cancelAnimationFrame(rafId);
+    el.style.zIndex = ''; el.style.opacity = ''; el.style.transform = '';
+    el.style.boxShadow = ''; el.style.cursor = ''; el.style.transition = '';
+    document.body.style.cursor = ''; document.body.style.userSelect = '';
+    const ns = HOUR_S * 60 + currentSlot * SLOT_MINUTES;
     const ne = ns + origDurMin;
     onMoveEvent(ev.id, {
       startHour: Math.floor(ns / 60), startMin: ns % 60,
@@ -326,66 +344,93 @@ function startHorizontalDrag(
 
 /**
  * Vertical drag for Day.2 (up/down along time axis).
+ *
+ * ★ Same DOM-position-first approach as startHorizontalDrag.
+ *   el.offsetTop is the ground truth; no dependency on render formula.
+ *   Mouse delta → rawTop → snap to slot → commit on mouseup.
  */
 function startVerticalDrag(
   e: React.MouseEvent,
   ev: SchedEvent,
-  slotPy: number,  // px per 10-min slot (= HOUR_H / SLOTS_PER_HOUR)
-  hourH: number,   // px per hour
+  slotPy: number,
+  _hourH: number,
   onMoveEvent: MoveEventFn,
+  scrollEl?: HTMLElement,
 ) {
   e.preventDefault();
   e.stopPropagation();
 
-  const el = e.currentTarget as HTMLElement;
-  const startY       = e.clientY;
-  const origStartMin = ev.startHour * 60 + ev.startMin;
-  const origDurMin   = (ev.endHour * 60 + ev.endMin) - origStartMin;
-  const cfg          = EVENT_CFG[ev.type];
+  const el         = e.currentTarget as HTMLElement;
+  const cfg        = EVENT_CFG[ev.type];
+  const origDurMin = (ev.endHour * 60 + ev.endMin) - (ev.startHour * 60 + ev.startMin);
+  const durSlots   = Math.round(origDurMin / SLOT_MINUTES);
+  const maxSlot    = TOTAL_SLOTS - durSlots;
 
-  el.style.zIndex    = '50';
-  el.style.opacity   = '0.88';
-  el.style.transform = 'scale(1.02)';
-  el.style.boxShadow = `0 8px 24px ${cfg.color}40`;
-  el.style.cursor    = 'grabbing';
+  // ── getBoundingClientRect ベース（スティッキーヘッダー対応）────────────────
+  // anchorEl（staff column, position:relative）のスクロールコンテンツ座標
+  // = ヘッダー高さ相当の値（ドラッグ中一定）
+  const anchorEl_v     = el.offsetParent as HTMLElement | null;
+  const scrollRect_v   = scrollEl ? scrollEl.getBoundingClientRect() : null;
+  const anchorRect_v   = anchorEl_v ? anchorEl_v.getBoundingClientRect() : null;
+  const anchorContentY = (scrollRect_v && anchorRect_v && scrollEl)
+    ? anchorRect_v.top - scrollRect_v.top + scrollEl.scrollTop
+    : 0;
+  // イベント内のどこを掴んだか（transform 適用前に取得）
+  const grabY = e.clientY - el.getBoundingClientRect().top;
+
+  let currentSlot = Math.max(0, Math.min(maxSlot, Math.round(el.offsetTop / slotPy)));
+  let lastMouse: MouseEvent | null = null;
+
+  el.style.zIndex     = '50';
+  el.style.opacity    = '0.88';
+  el.style.transform  = 'scale(1.02)';
+  el.style.boxShadow  = `0 8px 24px ${cfg.color}40`;
+  el.style.cursor     = 'grabbing';
   el.style.transition = 'none';
-  document.body.style.cursor    = 'grabbing';
+  document.body.style.cursor     = 'grabbing';
   document.body.style.userSelect = 'none';
 
-  let deltaSlots = 0;
-
-  const onMove = (me: MouseEvent) => {
-    const dy   = me.clientY - startY;
-    deltaSlots = Math.round(dy / slotPy);
-
-    const baseSMinOffset = origStartMin - HOUR_S * 60;
-    const newSMinOffset  = Math.max(0, Math.min(
-      TOTAL_SLOTS * SLOT_MINUTES - origDurMin,
-      baseSMinOffset + deltaSlots * SLOT_MINUTES,
-    ));
-    // top = (minutes_offset / 60) * hourH + 1  (the +1 matches React render)
-    el.style.top = `${(newSMinOffset / 60) * hourH + 1}px`;
+  const updatePos = (me: MouseEvent) => {
+    if (scrollEl) {
+      // マウスのスクロールコンテンツ座標 − グラブ位置 − anchorの座標 = イベントの新しい top
+      const mouseContentY = me.clientY - scrollEl.getBoundingClientRect().top + scrollEl.scrollTop;
+      const targetTop     = mouseContentY - grabY - anchorContentY;
+      currentSlot  = Math.max(0, Math.min(maxSlot, Math.round(targetTop / slotPy)));
+    } else {
+      currentSlot  = Math.max(0, Math.min(maxSlot, Math.round((el.offsetTop + (me.clientY - e.clientY)) / slotPy)));
+    }
+    el.style.top = `${currentSlot * slotPy}px`;
   };
+
+  const ZONE = 80; const MAX_SPEED = 12;
+  let rafId = 0;
+  const tick = () => {
+    if (scrollEl && lastMouse) {
+      const rect    = scrollEl.getBoundingClientRect();
+      const distBot = rect.bottom - lastMouse.clientY;
+      const distTop = lastMouse.clientY - rect.top;
+      if (distBot > 0 && distBot < ZONE) {
+        scrollEl.scrollTop += MAX_SPEED * (1 - distBot / ZONE);
+        updatePos(lastMouse);
+      } else if (distTop > 0 && distTop < ZONE) {
+        scrollEl.scrollTop -= MAX_SPEED * (1 - distTop / ZONE);
+        updatePos(lastMouse);
+      }
+    }
+    rafId = requestAnimationFrame(tick);
+  };
+  rafId = requestAnimationFrame(tick);
+
+  const onMove = (me: MouseEvent) => { lastMouse = me; updatePos(me); };
 
   const onUp = () => {
     document.removeEventListener('mousemove', onMove);
     document.removeEventListener('mouseup',   onUp);
-
-    el.style.zIndex    = '';
-    el.style.opacity   = '';
-    el.style.transform = '';
-    el.style.boxShadow = '';
-    el.style.cursor    = '';
-    el.style.transition = '';
-    document.body.style.cursor    = '';
-    document.body.style.userSelect = '';
-
-    const baseSMinOffset = origStartMin - HOUR_S * 60;
-    const newSMinOffset  = Math.max(0, Math.min(
-      TOTAL_SLOTS * SLOT_MINUTES - origDurMin,
-      baseSMinOffset + deltaSlots * SLOT_MINUTES,
-    ));
-    const ns = HOUR_S * 60 + newSMinOffset;
+    cancelAnimationFrame(rafId);
+    el.style.zIndex = ''; el.style.opacity = ''; el.style.transform = '';
+    el.style.boxShadow = ''; el.style.cursor = ''; el.style.transition = '';
+    document.body.style.cursor = ''; document.body.style.userSelect = '';
+    const ns = HOUR_S * 60 + currentSlot * SLOT_MINUTES;
     const ne = ns + origDurMin;
     onMoveEvent(ev.id, {
       startHour: Math.floor(ns / 60), startMin: ns % 60,
@@ -404,6 +449,7 @@ function DayView({ date, events, onMoveEvent }: { date: Date; events: SchedEvent
   const LABEL_W = 180;
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef    = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
 
   useEffect(() => {
@@ -434,7 +480,7 @@ function DayView({ date, events, onMoveEvent }: { date: Date; events: SchedEvent
 
   return (
     <div ref={containerRef} className="flex-1 min-h-0 flex flex-col">
-      <div className="flex-1 min-h-0 overflow-auto rounded-xl border border-neutral-200 bg-white">
+      <div ref={scrollRef} className="flex-1 min-h-0 overflow-auto rounded-xl border border-neutral-200 bg-white">
         <table style={{ borderCollapse: 'collapse', tableLayout: 'fixed', minWidth: LABEL_W + TRACK_W }}>
           <colgroup>
             <col style={{ width: LABEL_W }} />
@@ -492,7 +538,7 @@ function DayView({ date, events, onMoveEvent }: { date: Date; events: SchedEvent
                         return (
                           <div
                             key={ev.id}
-                            onMouseDown={(e) => startHorizontalDrag(e, ev, SLOT_WIDTH, HOUR_W, onMoveEvent)}
+                            onMouseDown={(e) => startHorizontalDrag(e, ev, SLOT_WIDTH, HOUR_W, onMoveEvent, scrollRef.current ?? undefined)}
                             style={{
                               position: 'absolute',
                               left: left + 2,
@@ -537,6 +583,7 @@ function Day2View({ date, events, onMoveEvent }: { date: Date; events: SchedEven
   const SLOT_PY = HOUR_H / SLOTS_PER_HOUR; // px per 10-min slot (vertical)
   const ds      = dStr(date);
   const dayEvts = useMemo(() => events.filter(e => e.date === ds), [events, ds]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const getSlots = (evts: SchedEvent[]) => {
     const sorted = [...evts].sort((a, b) => a.startHour * 60 + a.startMin - b.startHour * 60 - b.startMin);
@@ -570,7 +617,7 @@ function Day2View({ date, events, onMoveEvent }: { date: Date; events: SchedEven
   };
 
   return (
-    <div className="flex-1 min-h-0 overflow-auto rounded-xl border border-neutral-200 bg-white">
+    <div ref={scrollRef} className="flex-1 min-h-0 overflow-auto rounded-xl border border-neutral-200 bg-white">
       {/* Sticky header */}
       <div style={{ display: 'flex', position: 'sticky', top: 0, zIndex: 20, background: '#FAFAFA', borderBottom: '2px solid #E5E7EB' }}>
         <div style={{ width: TIME_W, flexShrink: 0, borderRight: '1px solid #E5E7EB', padding: '10px 6px', display: 'flex', alignItems: 'center' }}>
@@ -643,7 +690,7 @@ function Day2View({ date, events, onMoveEvent }: { date: Date; events: SchedEven
                 return (
                   <div
                     key={ev.id}
-                    onMouseDown={(e) => startVerticalDrag(e, ev, SLOT_PY, HOUR_H, onMoveEvent)}
+                    onMouseDown={(e) => startVerticalDrag(e, ev, SLOT_PY, HOUR_H, onMoveEvent, scrollRef.current ?? undefined)}
                     style={{
                       position: 'absolute', top, left, width, height,
                       background: cfg.bg,

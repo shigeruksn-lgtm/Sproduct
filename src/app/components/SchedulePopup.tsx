@@ -4,11 +4,43 @@ import { X, CalendarDays, ExternalLink, GripHorizontal } from 'lucide-react';
 import { Link } from 'react-router';
 import { ScheduleContent } from '../pages/Schedule';
 
-const HEADER_H   = 56;  // HomeLayout top bar
-const PANEL_BAR  = 48;  // SchedulePopup inner header bar
-const MIN_TOP    = HEADER_H + 40;   // 最小：ヘッダー直下+40px
-const MAX_TOP    = window.innerHeight - 160; // 最大：下から160px残す
-const DEFAULT_TOP = HEADER_H;       // 初期：全画面
+// ─────────────────────────────────────────────────────────────────────────────
+// SchedulePopup — ドラッグ高さ調整パネル
+//
+// 【トラブルシューティング: "下まで引けない" 再発時の対処】
+//
+//  症状: ドラッグハンドルを下に引いてもある位置で止まってしまう
+//
+//  原因1: getMaxTop() の戻り値が小さすぎる
+//    → `window.innerHeight - PANEL_BAR - 8` を見直す。
+//      「- 8」を増やすと止まる位置が上（より大きなパネル）になる。
+//      「- 8」を 0 に近づけるとパネルヘッダーバーだけ残って下端まで引ける。
+//
+//  原因2: MAX_TOP を定数（モジュール最上位）で計算していた場合
+//    → 必ず「関数 getMaxTop()」として毎回 window.innerHeight を参照すること。
+//      定数だとモジュールロード時の値が固定されてリサイズに追従しない。
+//
+//  原因3: スナップ閉じ閾値 (snapThreshold = getMaxTop() - 80) が狭い
+//    → 下端付近でパネルが閉じてしまう場合は 80 → 40 に縮める。
+//      逆に閉じにくい場合は 80 → 150 に広げる。
+//
+//  原因4: MIN_TOP が大きすぎて上方向に引けない
+//    → MIN_TOP = HEADER_H + 40 の「+ 40」を調整する。
+// ─────────────────────────────────────────────────────────────────────────────
+
+const HEADER_H    = 56;   // HomeLayout top bar の高さ (px)
+const PANEL_BAR   = 48;   // SchedulePopup 内ヘッダーバーの高さ (px)
+const MIN_TOP     = HEADER_H + 40;  // パネル top の最小値（これ以上上には行かない）
+const DEFAULT_TOP = HEADER_H;       // 初期値：全画面表示
+
+/**
+ * パネル top の最大値（これ以上下には行かない）。
+ * ★ 定数ではなく関数で毎回計算 → ウィンドウリサイズに追従する。
+ * ★ "下まで行かない" 再発時はまずここの値を確認すること。
+ */
+function getMaxTop() {
+  return window.innerHeight - PANEL_BAR - 8;
+}
 
 interface SchedulePopupProps {
   open: boolean;
@@ -46,27 +78,39 @@ export function SchedulePopup({ open, onClose, sidebarWidth }: SchedulePopupProp
 
   // ── ドラッグ処理 ────────────────────────────────────────────────────────────
   const onDragStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     dragging.current = true;
     startY.current   = 'touches' in e ? e.touches[0].clientY : e.clientY;
     startTop.current = panelTop;
     document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'ns-resize';
   }, [panelTop]);
 
   useEffect(() => {
     const onMove = (e: MouseEvent | TouchEvent) => {
       if (!dragging.current) return;
+      e.preventDefault();
       const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
       const delta   = clientY - startY.current;
-      const next    = Math.max(MIN_TOP, Math.min(MAX_TOP, startTop.current + delta));
+      const next    = Math.max(MIN_TOP, Math.min(getMaxTop(), startTop.current + delta));
       setPanelTop(next);
     };
-    const onUp = () => {
+    const onUp = (e: MouseEvent | TouchEvent) => {
+      if (!dragging.current) return;
       dragging.current = false;
       document.body.style.userSelect = '';
+      document.body.style.cursor = '';
+      // 下端 80px 以内まで引いたら閉じる
+      const snapThreshold = getMaxTop() - 80;
+      const clientY = e instanceof MouseEvent ? e.clientY : (e as TouchEvent).changedTouches[0]?.clientY ?? 0;
+      if (startTop.current + (clientY - startY.current) >= snapThreshold) {
+        onClose();
+      }
     };
-    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mousemove', onMove, { passive: false });
     window.addEventListener('mouseup',   onUp);
-    window.addEventListener('touchmove', onMove, { passive: true });
+    window.addEventListener('touchmove', onMove, { passive: false });
     window.addEventListener('touchend',  onUp);
     return () => {
       window.removeEventListener('mousemove', onMove);
@@ -74,7 +118,7 @@ export function SchedulePopup({ open, onClose, sidebarWidth }: SchedulePopupProp
       window.removeEventListener('touchmove', onMove);
       window.removeEventListener('touchend',  onUp);
     };
-  }, []);
+  }, [onClose]);
 
   return (
     <AnimatePresence>
@@ -113,8 +157,8 @@ export function SchedulePopup({ open, onClose, sidebarWidth }: SchedulePopupProp
             <div
               className="absolute left-0 right-0 flex flex-col items-center justify-center z-10 cursor-ns-resize select-none"
               style={{
-                top: -18,
-                height: 20,
+                top: -28,
+                height: 32,
               }}
               onMouseDown={onDragStart}
               onTouchStart={onDragStart}
@@ -122,8 +166,8 @@ export function SchedulePopup({ open, onClose, sidebarWidth }: SchedulePopupProp
             >
               {/* ハンドルバー本体 */}
               <div
-                className="flex items-center justify-center gap-1.5 px-4 py-1 rounded-full shadow-md"
-                style={{ background: 'rgba(255,255,255,0.92)', border: '1px solid #E5E7EB' }}
+                className="flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-full shadow-md"
+                style={{ background: 'rgba(255,255,255,0.95)', border: '1px solid #E5E7EB', pointerEvents: 'none' }}
               >
                 <GripHorizontal className="w-4 h-4 text-neutral-400" />
                 <span style={{ fontSize: 10, color: '#9CA3AF', fontWeight: 500, letterSpacing: '0.05em' }}>

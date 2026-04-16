@@ -26,7 +26,7 @@ export const gradientPatterns: Record<GradientPattern, {
 }> = {
   B: {
     dots: patternB,
-    textGradient: 'linear-gradient(135deg, #F5C518 0%, #E48E20 25%, #D06030 45%, #A83C42 60%, #503A6E 80%, #3C2562 100%)',
+    textGradient: 'linear-gradient(135deg, #F5C518 0%, #F5C518 15%, #E48E20 33%, #D06030 52%, #A83C42 65%, #503A6E 78%, #3C2562 100%)',
     label: 'Pattern B',
     description: '滑らかなグラデーション — 中間色を丁寧に補間',
     productLines: {
@@ -58,6 +58,16 @@ export const gradientPatterns: Record<GradientPattern, {
           ['#C4B5FD', '#A78BFA', '#8B5CF6'],
           ['#7E3858', '#6D3A63', '#503A6E'],
           ['#3B3470', '#2B2F64', '#3C2562'],
+        ],
+      },
+      AI: {
+        gradient: 'linear-gradient(135deg, #38BDF8 0%, #3B82F6 50%, #1D4ED8 100%)',
+        color: '#3B82F6',
+        light: '#EFF6FF',
+        dots: [
+          ['#BAE6FD', '#7DD3FC', '#38BDF8'],
+          ['#60A5FA', '#3B82F6', '#2563EB'],
+          ['#1D4ED8', '#1E40AF', '#1E3A8A'],
         ],
       },
     },

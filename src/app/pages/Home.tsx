@@ -5,37 +5,27 @@ import {
   ProductLineBadge,
 } from "../components/GridIcon";
 import { PatternBPalette } from "../components/PatternBPalette";
+import { ModeIconGlassCard, ModeIconGlass, MODE_GLASS_CONFIG } from "../components/ModeIconGlass";
 import React, { useState, useRef } from "react";
 import { Link } from "react-router";
 import {
-  Heart,
-  Users,
-  Sparkles,
-  Camera,
-  Flower2,
   ChevronDown,
 } from "lucide-react";
 import { motion } from "motion/react";
 import esOjisanImg from "figma:asset/a2e64ff85bdae31ceb529d8a9380ee68327aa6e6.png";
+import synapseImg from "figma:asset/7dc195601692a81362a07dbf1225fe2b9b788242.png";
+import esOjisanBWImg from "figma:asset/4767d4026ad10b35afa0ffd2506b79812c6cdc38.png";
+import { Synapse02 } from "../components/Synapse02";
+import { Synapse03 } from "../components/Synapse03";
+import { Synapse04 } from "../components/Synapse04";
+import { Synapse01 } from "../components/Synapse01";
+import { Synapse05 } from "../components/Synapse05";
+import { Synapse06 } from "../components/Synapse06";
+import { Synapse07 } from "../components/Synapse07";
+import { Synapse08 } from "../components/Synapse08";
+import { Synapse09 } from "../components/Synapse09";
 
-// カスタムドレスアイコン
-const DressIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M8 3L6 8L4 21H20L18 8L16 3" />
-    <path d="M12 3V8" />
-    <path d="M8 3H16" />
-    <circle cx="12" cy="5" r="1.5" />
-  </svg>
-);
+const ES_GRADIENT = 'linear-gradient(135deg, #F5C518 0%, #D49B1A 20%, #C0392B 50%, #4A2040 80%, #3C2562 100%)';
 
 // プロダクトライン定義
 const productLines = [
@@ -62,131 +52,31 @@ const productLines = [
   },
 ];
 
+// AI ライン（独立 — ES/CS/PS 全体に横断）
+const aiLine = {
+  id: "AI",
+  letter: "A",
+  description: "AI Intelligence",
+  who: "すべてのラインに横断するAI機能",
+  subtitle: "業務を自動化・最適化するインテリジェンス",
+};
+
 // モード定義
 const modes = [
-  {
-    id: "br",
-    code: "Br",
-    title: "婚礼モード",
-    subtitle: "Bridal",
-    icon: Heart,
-    color: "#E05580",
-  },
-  {
-    id: "gp",
-    code: "Gp",
-    title: "法人宴会モード",
-    subtitle: "Group Party",
-    icon: Users,
-    color: "#6366F1",
-  },
-  {
-    id: "dr",
-    code: "Dr",
-    title: "衣装モード",
-    subtitle: "Dress",
-    icon: DressIcon,
-    color: "#D4731A",
-  },
-  {
-    id: "et",
-    code: "Et",
-    title: "美容モード",
-    subtitle: "Esthetic",
-    icon: Sparkles,
-    color: "#10B981",
-  },
-  {
-    id: "ph",
-    code: "Ph",
-    title: "写真モード",
-    subtitle: "Photo",
-    icon: Camera,
-    color: "#3B82F6",
-  },
-  {
-    id: "fl",
-    code: "Fl",
-    title: "装花モード",
-    subtitle: "Flower",
-    icon: Flower2,
-    color: "#F59E0B",
-  },
+  { id: "br", code: "Br", title: "婚礼モード",    subtitle: "Bridal",      color: "#E05580" },
+  { id: "gp", code: "Gp", title: "法人宴会モード", subtitle: "Group Party", color: "#6366F1" },
+  { id: "dr", code: "Dr", title: "衣装モード",    subtitle: "Dress",       color: "#D4731A" },
+  { id: "et", code: "Et", title: "美容モード",    subtitle: "Esthetic",    color: "#10B981" },
+  { id: "ph", code: "Ph", title: "写真モード",    subtitle: "Photo",       color: "#3B82F6" },
+  { id: "fl", code: "Fl", title: "装花モード",    subtitle: "Flower",      color: "#F59E0B" },
 ];
-
-const MODE_BORDER_COLORS: Record<string, string> = {
-  Br: "linear-gradient(135deg, #ff8a8a, #ef4444, #b91c1c)",
-  Gp: "linear-gradient(135deg, #c7d2fe, #818cf8, #4f46e5)",
-  Dr: "linear-gradient(135deg, #fed7aa, #fb923c, #ea580c)",
-  Et: "linear-gradient(135deg, #a7f3d0, #34d399, #059669)",
-  Ph: "linear-gradient(135deg, #bfdbfe, #60a5fa, #2563eb)",
-  Fl: "linear-gradient(135deg, #fce7f3, #f9a8d4, #ec4899)",
-};
-
-const ModeBadge = ({
-  code,
-  size = 32,
-}: {
-  code: string;
-  size?: number;
-}) => {
-  const darkFill = "#1e293b";
-  const fs = Math.round(size * 0.32);
-  const borderColor = MODE_BORDER_COLORS[code] ?? "#a3a3a3";
-  const sw = 2;
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: fs,
-    color: "#ffffff",
-    letterSpacing: "0.05em",
-    fontWeight: 500,
-    lineHeight: 1,
-    userSelect: "none",
-    position: "relative",
-    zIndex: 1,
-  };
-
-  return (
-    <div
-      style={{
-        width: size,
-        height: size,
-        flexShrink: 0,
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: "50%",
-          background: borderColor,
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: sw,
-          left: sw,
-          right: sw,
-          bottom: sw,
-          borderRadius: "50%",
-          background: darkFill,
-        }}
-      />
-      <span style={labelStyle}>{code}</span>
-    </div>
-  );
-};
 
 // マトリックスデータ
 const matrix: Record<string, string[]> = {
   ES: ["Br", "Gp", "Dr", "Et", "Ph", "Fl"],
   CS: ["Br", "Gp", "Dr"],
   PS: ["Br", "Gp"],
+  AI: ["Br", "Gp", "Dr", "Et", "Ph", "Fl"],
 };
 
 const fadeUp = {
@@ -262,27 +152,30 @@ export default function Home() {
         </motion.div>
 
         <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="mt-6 tracking-wide text-center"
+          style={{
+            fontWeight: 500,
+            fontSize: '1.15rem',
+            backgroundImage: ES_GRADIENT,
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}
+        >
+          婚礼・宴会・衣装・美容の総合基幹システム
+        </motion.p>
+
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="mt-6 text-neutral-400 text-base tracking-widest"
+          transition={{ delay: 0.7, duration: 0.8 }}
+          className="mt-4 text-neutral-400 text-base tracking-widest"
         >
           すべてをシームレスへ。
         </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.6 }}
-          className="mt-10"
-        >
-          <Link
-            to="/showcase"
-            className="px-8 py-3 rounded-full text-sm tracking-widest uppercase border border-neutral-300 text-neutral-500 hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-all"
-          >
-            Explore
-          </Link>
-        </motion.div>
 
         <motion.button
           initial={{ opacity: 0 }}
@@ -304,7 +197,7 @@ export default function Home() {
       </section>
 
       {/* ===== About Section ===== */}
-      <section ref={contentRef} className="py-24 md:py-32 px-8">
+      <section ref={contentRef} className="relative py-24 md:py-32 px-8">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div
             initial="hidden"
@@ -465,8 +358,323 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== Logo Concept Section ===== */}
+      <section className="relative py-32 px-8 bg-neutral-50">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={stagger}
+          >
+            <motion.p
+              variants={fadeUp}
+              className="text-xs tracking-[0.3em] uppercase text-neutral-400 mb-4"
+            >
+              Logo Concept
+            </motion.p>
+            <motion.h2
+              variants={fadeUp}
+              className="text-4xl tracking-tight text-neutral-900 mb-20"
+              style={{ fontWeight: 300 }}
+            >
+              ロゴのコンセプト
+            </motion.h2>
+
+            {/* ── Main visual ── */}
+            <motion.div
+              variants={fadeUp}
+              className="grid grid-cols-1 md:grid-cols-2 gap-px bg-neutral-200 mb-px"
+            >
+              {/* Left — Ɛ symbol + S transform */}
+              <div className="bg-white p-16 flex flex-col justify-between">
+                <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-300 mb-10">
+                  01 &mdash; Symbol
+                </p>
+
+                {/* S → Ɛ transform visual */}
+                <div className="flex items-center justify-center gap-8 mb-14">
+                  <div className="flex flex-col items-center gap-3">
+                    <span
+                      className="text-8xl tracking-tight text-neutral-200 select-none"
+                      style={{ fontWeight: 600, lineHeight: 1 }}
+                    >
+                      S
+                    </span>
+                    <span className="text-[9px] tracking-[0.25em] uppercase text-neutral-300">
+                      origin
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col items-center gap-1">
+                    <svg width="32" height="12" viewBox="0 0 32 12" fill="none">
+                      <line x1="0" y1="6" x2="24" y2="6" stroke="#D1D5DB" strokeWidth="1"/>
+                      <polyline points="18,1 26,6 18,11" stroke="#D1D5DB" strokeWidth="1" fill="none"/>
+                    </svg>
+                    <span className="text-[8px] tracking-[0.2em] text-neutral-300 uppercase">mirror</span>
+                  </div>
+
+                  <div className="flex flex-col items-center gap-3">
+                    <span
+                      className="text-8xl tracking-tight select-none"
+                      style={{
+                        fontWeight: 600,
+                        lineHeight: 1,
+                        backgroundImage: currentGradient.textGradient,
+                        backgroundClip: "text",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                      }}
+                    >
+                      &#x190;
+                    </span>
+                    <span className="text-[9px] tracking-[0.25em] uppercase text-neutral-400">
+                      Ɛ — epsilon
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-4 border-t border-neutral-100 pt-8">
+                  <p
+                    className="text-neutral-500 text-sm"
+                    style={{ lineHeight: 2, fontWeight: 300 }}
+                  >
+                    「S」���水平反転させた造形。角ばった「E」ではなく、
+                    S字曲線を宿した Ɛ（エプシロン）を採用することで、
+                    プロダクトラインの共通項たる「S」をロゴ自身に刻む。
+                  </p>
+                  <p
+                    className="text-[11px] text-neutral-400"
+                    style={{ lineHeight: 1.8, fontWeight: 300 }}
+                  >
+                    ※ パッと見で「E」と認識させつつ、「イーエス」の呼称を継承。
+                  </p>
+                </div>
+              </div>
+
+              {/* Right — 3×3 dot grid */}
+              <div className="bg-white p-16 flex flex-col justify-between">
+                <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-300 mb-10">
+                  03 &mdash; 9 Dots / Concept Color Grid
+                </p>
+
+                <div className="flex justify-center mb-10">
+                  <div
+                    className="grid gap-5"
+                    style={{ gridTemplateColumns: "repeat(3, 1fr)", width: "fit-content" }}
+                  >
+                    {(currentGradient.dots as string[][]).flat().map((color, i) => {
+                      const row = Math.floor(i / 3);
+                      const lineLabels = ["ES", "CS", "PS"];
+                      return (
+                        <div key={i} className="flex flex-col items-center gap-2">
+                          <div
+                            className="rounded-full"
+                            style={{
+                              width: 36,
+                              height: 36,
+                              backgroundColor: color,
+                              boxShadow: `0 4px 16px ${color}55`,
+                            }}
+                          />
+                          {i % 3 === 1 && (
+                            <span className="text-[8px] tracking-[0.15em] uppercase text-neutral-300">
+                              {lineLabels[row]}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="space-y-3 border-t border-neutral-100 pt-8">
+                  {(currentGradient.dots as string[][]).map((row, ri) => {
+                    const labels = [
+                      { id: "ES", desc: "イエロー — エネルギーと始まり" },
+                      { id: "CS", desc: "レッド・オレンジ — 高揚感" },
+                      { id: "PS", desc: "パープル — 信頼の黒子" },
+                    ];
+                    return (
+                      <div key={ri} className="flex items-center gap-4">
+                        <span
+                          className="text-[10px] tracking-[0.15em] uppercase flex-shrink-0"
+                          style={{
+                            backgroundImage: `linear-gradient(90deg, ${row[0]}, ${row[2]})`,
+                            backgroundClip: "text",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            fontWeight: 600,
+                            minWidth: "2.5rem",
+                          }}
+                        >
+                          {labels[ri].id}
+                        </span>
+                        <div
+                          className="flex-1 h-1.5 rounded-full"
+                          style={{
+                            background: `linear-gradient(90deg, ${row[0]} 0%, ${row[1]} 50%, ${row[2]} 100%)`,
+                          }}
+                        />
+                        <span className="text-[9px] text-neutral-400" style={{ fontWeight: 300, minWidth: "9rem" }}>
+                          {labels[ri].desc}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* ── Gradient story ── */}
+            <motion.div
+              variants={fadeUp}
+              className="bg-white p-16 mb-px"
+            >
+              <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-300 mb-10">
+                02 &mdash; Gradient Story
+              </p>
+
+              <div
+                className="w-full h-10 rounded-full mb-10"
+                style={{ background: currentGradient.textGradient }}
+              />
+
+              <div className="grid grid-cols-3 gap-px bg-neutral-100">
+                {[
+                  {
+                    id: "ES",
+                    label: "Top-Left",
+                    color: "#F5C518",
+                    desc: "イエロー",
+                    story: "エネルギーと始まりの象徴。すべてのプロセスの起点。",
+                    gradient: currentGradient.productLines["ES"]?.gradient,
+                  },
+                  {
+                    id: "CS",
+                    label: "Center",
+                    color: "#D06030",
+                    desc: "レッド・オレンジ",
+                    story: "新郎新婦やゲストの気分が上がる、感情の高揚感。",
+                    gradient: currentGradient.productLines["CS"]?.gradient,
+                  },
+                  {
+                    id: "PS",
+                    label: "Bottom-Right",
+                    color: "#503A6E",
+                    desc: "パープル",
+                    story: "会社様を背後から支える「黒子」としての信頼と深み。",
+                    gradient: currentGradient.productLines["PS"]?.gradient,
+                  },
+                ].map((item) => (
+                  <div key={item.id} className="bg-white p-10">
+                    <div
+                      className="w-10 h-10 rounded-full mb-6"
+                      style={{
+                        background: item.gradient,
+                        boxShadow: `0 4px 20px ${item.color}60`,
+                      }}
+                    />
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span
+                        className="text-xl tracking-tight"
+                        style={{
+                          backgroundImage: item.gradient,
+                          backgroundClip: "text",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {item.id}
+                      </span>
+                      <span className="text-[10px] tracking-[0.15em] uppercase text-neutral-300">
+                        {item.label}
+                      </span>
+                    </div>
+                    <p className="text-sm text-neutral-500 mb-1" style={{ fontWeight: 400 }}>
+                      {item.desc}
+                    </p>
+                    <p className="text-xs text-neutral-400" style={{ lineHeight: 1.8, fontWeight: 300 }}>
+                      {item.story}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 flex items-center gap-4">
+                <div
+                  className="w-6 h-6 rounded flex-shrink-0"
+                  style={{
+                    background: "linear-gradient(135deg, #F5C518 0%, #3C2562 100%)",
+                  }}
+                />
+                <p className="text-[11px] text-neutral-400 tracking-wide" style={{ fontWeight: 300 }}>
+                  Direction: <span className="text-neutral-600">135° — Top-Left → Bottom-Right</span>
+                  　　Stops: <span className="text-neutral-600">#F5C518 → #E48E20 → #D06030 → #A83C42 → #503A6E → #3C2562</span>
+                </p>
+              </div>
+            </motion.div>
+
+            {/* ── Figma Spec ── */}
+            <motion.div
+              variants={fadeUp}
+              className="bg-neutral-900 p-12"
+            >
+              <div className="flex items-start gap-6 mb-8">
+                <GridIcon size={36} pattern={pattern} />
+                <div>
+                  <p className="text-[10px] tracking-[0.3em] uppercase text-neutral-500 mb-1">
+                    Figma Production Spec
+                  </p>
+                  <p className="text-neutral-200 text-sm tracking-wide" style={{ fontWeight: 300 }}>
+                    【ƐS Product ロゴ制作依頼】
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[
+                  {
+                    label: "Symbol",
+                    desc: "「S」を完全にミラー反転させた「Ɛ」をロゴタイプとして作成。角ばったEではなくS字曲線を継承すること。",
+                  },
+                  {
+                    label: "Gradient",
+                    desc: "左上（#F5C518 イエロー）から右下（#3C2562 パープル）への135°リニアグラデーションを「Ɛ」に適用。",
+                  },
+                  {
+                    label: "Grid",
+                    desc: "9つのドットを3×3で配置。ES（ゴールド系）・CS（レッド系）・PS（パープル系）の各3色を行ごとに割り当て。",
+                  },
+                  {
+                    label: "Scaling",
+                    desc: "スマホのメニューアイコンとして利用できるよう、シンボルマーク単体での視認性を検証。ドット間マージンは縮小時も色が潰れない厳密な比率で。",
+                  },
+                ].map((item) => (
+                  <div key={item.label} className="flex gap-4">
+                    <div
+                      className="w-px self-stretch flex-shrink-0"
+                      style={{ background: currentGradient.textGradient }}
+                    />
+                    <div>
+                      <p className="text-[10px] tracking-[0.2em] uppercase text-neutral-400 mb-1">
+                        {item.label}
+                      </p>
+                      <p className="text-neutral-400 text-xs" style={{ lineHeight: 1.9, fontWeight: 300 }}>
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+          </motion.div>
+        </div>
+      </section>
+
       {/* ===== Product Lines Section ===== */}
-      <section className="py-32 px-8">
+      <section className="relative py-32 px-8">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial="hidden"
@@ -488,10 +696,10 @@ export default function Home() {
               3つのプロダクトライン
             </motion.h2>
 
+            {/* ES / CS / PS — 3列グリッド */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-neutral-200">
               {productLines.map((line) => {
-                const plColors =
-                  currentGradient.productLines[line.id];
+                const plColors = currentGradient.productLines[line.id];
                 return (
                   <motion.div
                     key={line.id}
@@ -505,7 +713,6 @@ export default function Home() {
                       variant="outline"
                       className="mb-8"
                     />
-
                     <div className="flex items-baseline gap-1 mb-4">
                       <span
                         className="text-5xl tracking-tight"
@@ -532,142 +739,310 @@ export default function Home() {
                         S
                       </span>
                     </div>
-
                     <p className="text-sm text-neutral-400 tracking-wide mb-3">
                       {line.description}
                     </p>
-                    <p className="text-neutral-600 mb-2">
-                      {line.who}
-                    </p>
-                    <p className="text-[11px] text-neutral-400/70">
-                      {line.subtitle}
-                    </p>
-
+                    <p className="text-neutral-600 mb-2">{line.who}</p>
+                    <p className="text-[11px] text-neutral-400/70">{line.subtitle}</p>
                     <div className="mt-8 flex gap-2 flex-wrap">
                       {matrix[line.id].map((modeCode) => (
-                        <ModeBadge
-                          key={modeCode}
-                          code={modeCode}
-                          size={32}
-                        />
+                        <ModeIconGlass key={modeCode} code={modeCode} size={32} theme="light" variant="badge" />
                       ))}
                     </div>
                   </motion.div>
                 );
               })}
             </div>
+
+            {/* AI — 独立カード（全幅・横長） */}
+            {(() => {
+              const aiColors = currentGradient.productLines[aiLine.id];
+              return (
+                <>
+                  <div className="h-px bg-neutral-200" />
+                  <motion.div
+                    variants={fadeUp}
+                    className="overflow-hidden bg-white hover:bg-neutral-50 transition-colors"
+                  >
+                    <div className="px-12 pt-8 pb-0">
+                      <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400">
+                        + AI Layer — すべてのラインに横断
+                      </span>
+                    </div>
+                    <div className="px-12 py-10 flex flex-col md:flex-row md:items-center gap-10">
+                      {/* 左：バッジ + タイトル */}
+                      <div className="flex items-center gap-6 flex-shrink-0">
+                        <ProductLineBadge
+                          lineId={aiLine.id}
+                          size={56}
+                          pattern={pattern}
+                          variant="outline"
+                        />
+                        <div>
+                          <span
+                            className="text-5xl tracking-tight"
+                            style={{
+                              backgroundImage: aiColors.gradient,
+                              backgroundClip: "text",
+                              WebkitBackgroundClip: "text",
+                              WebkitTextFillColor: "transparent",
+                              fontWeight: 600,
+                            }}
+                          >
+                            AI
+                          </span>
+                          <p className="text-sm text-neutral-400 tracking-wide mt-1">
+                            {aiLine.description}
+                          </p>
+                        </div>
+                      </div>
+                      {/* 中：説明 */}
+                      <div className="flex-1 md:border-l md:border-neutral-100 md:pl-10">
+                        <p className="text-neutral-600 mb-1">{aiLine.who}</p>
+                        <p className="text-[11px] text-neutral-400/70">{aiLine.subtitle}</p>
+                      </div>
+                      {/* 右：全モードバッジ */}
+                      <div className="flex-shrink-0 flex flex-col gap-2">
+                        <p className="text-[10px] tracking-[0.2em] uppercase text-neutral-400 mb-1">
+                          All Modes
+                        </p>
+                        <div className="flex gap-2 flex-wrap">
+                          {matrix[aiLine.id].map((modeCode) => (
+                            <ModeIconGlass key={modeCode} code={modeCode} size={32} theme="light" variant="badge" />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                  </motion.div>
+                  <div className="h-px bg-neutral-200" />
+                </>
+              );
+            })()}
           </motion.div>
         </div>
       </section>
 
-      {/* ===== Modes Section ===== */}
-      <section className="py-32 px-8">
-        <div className="max-w-6xl mx-auto">
+      {/* ===== Mode Icon Glass Showcase ===== */}
+      <section
+        style={{
+          background:
+            "linear-gradient(150deg, #100c1f 0%, #0d1a2e 35%, #0a1628 55%, #150d24 80%, #1a0e2e 100%)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+        className="py-32 px-8"
+      >
+        {/* 背景装飾：ノイズ感のある光粒 */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `
+              radial-gradient(ellipse 60% 40% at 20% 50%, rgba(224,85,128,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse 50% 50% at 80% 30%, rgba(96,165,250,0.07) 0%, transparent 60%),
+              radial-gradient(ellipse 40% 60% at 55% 80%, rgba(129,140,248,0.06) 0%, transparent 60%)
+            `,
+            pointerEvents: "none",
+          }}
+        />
+        {/* 微細グリッドライン */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+            pointerEvents: "none",
+          }}
+        />
+
+        <div className="max-w-6xl mx-auto relative">
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-80px" }}
             variants={stagger}
           >
+            {/* ヘッダー */}
             <motion.p
               variants={fadeUp}
-              className="text-xs tracking-[0.3em] uppercase text-neutral-400 mb-4"
+              style={{
+                fontSize: 11,
+                letterSpacing: "0.3em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.35)",
+                fontFamily: "DM Sans, sans-serif",
+                marginBottom: 16,
+              }}
             >
-              Modes
+              Mode Icons
             </motion.p>
             <motion.h2
               variants={fadeUp}
-              className="text-4xl tracking-tight text-neutral-900 mb-20"
-              style={{ fontWeight: 300 }}
+              style={{
+                fontSize: 36,
+                fontWeight: 300,
+                letterSpacing: "-0.02em",
+                color: "rgba(255,255,255,0.88)",
+                fontFamily: "DM Sans, sans-serif",
+                marginBottom: 12,
+              }}
             >
               6つのモード
             </motion.h2>
+            <motion.p
+              variants={fadeUp}
+              style={{
+                fontSize: 14,
+                color: "rgba(255,255,255,0.38)",
+                fontFamily: "DM Sans, sans-serif",
+                marginBottom: 64,
+                maxWidth: 480,
+                lineHeight: 1.7,
+              }}
+            >
+              婚礼・法人宴会・衣装・美容・写真・装花。
+              各モードは独立したプロセス設計を持ち、プロダクトラインと組み合わせることで業務全体をカバーします。
+            </motion.p>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-neutral-200">
-              {modes.map((mode) => {
-                const Icon = mode.icon;
-                const isActive = activeMode === mode.id;
-                return (
-                  <motion.button
-                    key={mode.id}
-                    variants={fadeUp}
-                    onClick={() =>
-                      setActiveMode(isActive ? null : mode.id)
-                    }
-                    className={`text-left p-10 transition-all cursor-pointer ${
-                      isActive
-                        ? "bg-neutral-50"
-                        : "bg-white hover:bg-neutral-50"
-                    }`}
-                  >
-                    <Icon
-                      className={`w-8 h-8 mb-6 stroke-[1] transition-colors ${
-                        isActive
-                          ? "text-neutral-900"
-                          : "text-neutral-300"
-                      }`}
-                    />
+            {/* アイコングリッド */}
+            <motion.div
+              variants={fadeUp}
+              className="grid grid-cols-3 md:grid-cols-6 gap-10 mb-20"
+            >
+              {["Br", "Gp", "Dr", "Et", "Ph", "Fl"].map((code) => (
+                <ModeIconGlassCard key={code} code={code} iconSize={88} />
+              ))}
+            </motion.div>
 
-                    <div className="flex items-baseline gap-3 mb-2">
-                      <ModeBadge code={mode.code} size={44} />
-                      <span
-                        className={`text-xl tracking-tight transition-colors ${
-                          isActive
-                            ? "text-neutral-900"
-                            : "text-neutral-600"
-                        }`}
-                        style={{ fontWeight: 300 }}
-                      >
-                        {mode.title}
-                      </span>
+            {/* サイズバリエーション */}
+            <motion.div
+              variants={fadeUp}
+              style={{
+                borderTop: "1px solid rgba(255,255,255,0.08)",
+                paddingTop: 48,
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.28)",
+                  fontFamily: "DM Sans, sans-serif",
+                  marginBottom: 28,
+                }}
+              >
+                Size variations
+              </p>
+              <div className="flex items-end gap-6 flex-wrap">
+                {[120, 88, 64, 44, 32].map((sz) => (
+                  <div key={sz} className="flex flex-col items-center gap-3">
+                    <ModeIconGlass code="Br" size={sz} />
+                    <span
+                      style={{
+                        fontSize: 10,
+                        color: "rgba(255,255,255,0.22)",
+                        fontFamily: "DM Sans, sans-serif",
+                        letterSpacing: "0.1em",
+                      }}
+                    >
+                      {sz}px
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* 技術仕様メモ */}
+            <motion.div
+              variants={fadeUp}
+              style={{
+                marginTop: 48,
+                padding: "20px 24px",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 8,
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.28)",
+                  fontFamily: "DM Sans, sans-serif",
+                  marginBottom: 10,
+                }}
+              >
+                CSS Implementation
+              </p>
+              <code
+                style={{
+                  fontSize: 12,
+                  color: "rgba(255,255,255,0.5)",
+                  fontFamily: "monospace",
+                  lineHeight: 1.8,
+                  display: "block",
+                }}
+              >
+                background: rgba(255, 255, 255, 0.13)<br />
+                backdrop-filter: blur(18px) saturate(180%)<br />
+                -webkit-backdrop-filter: blur(18px) saturate(180%)<br />
+                border: 1px solid rgba(255, 255, 255, 0.28)
+              </code>
+            </motion.div>
+
+            {/* Circle variant — ダーク背景 */}
+            <motion.div
+              variants={fadeUp}
+              style={{
+                borderTop: "1px solid rgba(255,255,255,0.08)",
+                paddingTop: 48,
+                marginTop: 48,
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.28)",
+                  fontFamily: "DM Sans, sans-serif",
+                  marginBottom: 28,
+                }}
+              >
+                Circle variant — dark
+              </p>
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-10">
+                {["Br", "Gp", "Dr", "Et", "Ph", "Fl"].map((code) => {
+                  const cfg = MODE_GLASS_CONFIG[code];
+                  return (
+                    <div key={code} className="group flex flex-col items-center gap-4 cursor-default select-none">
+                      <div className="transition-transform duration-500 ease-out group-hover:-translate-y-2">
+                        <ModeIconGlass code={code} size={88} theme="dark" variant="circle" />
+                      </div>
+                      <div className="text-center space-y-1">
+                        <p style={{ fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.82)", fontFamily: "DM Sans, sans-serif" }}>{cfg?.label}</p>
+                        <p style={{ fontSize: 11, color: "rgba(255,255,255,0.36)", fontFamily: "DM Sans, sans-serif", letterSpacing: "0.18em", textTransform: "uppercase" }}>{cfg?.sublabel}</p>
+                      </div>
                     </div>
-
-                    <p className="text-sm text-neutral-400">
-                      {mode.subtitle}
-                    </p>
-
-                    {isActive && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        className="mt-6 pt-6 border-t border-neutral-200 flex gap-3"
-                      >
-                        {productLines.map((line) => {
-                          const available = matrix[
-                            line.id
-                          ].includes(mode.code);
-                          return (
-                            <div
-                              key={line.id}
-                              className="flex items-center"
-                            >
-                              {available ? (
-                                <ProductLineBadge
-                                  lineId={line.id}
-                                  size={32}
-                                  pattern={pattern}
-                                  variant="solid"
-                                />
-                              ) : (
-                                <div className="px-3 py-1.5 rounded text-xs tracking-wide text-neutral-700 border border-neutral-800">
-                                  {line.id}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </motion.div>
-                    )}
-                  </motion.button>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* ===== Matrix Section ===== */}
-      <section className="py-32 px-8">
+      <section className="relative py-32 px-8">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial="hidden"
@@ -695,7 +1070,12 @@ export default function Home() {
             >
               <table className="w-full border-collapse">
                 <thead>
-                  <tr>
+                  <tr
+                    style={{
+                      background:
+                        "linear-gradient(150deg, #100c1f 0%, #0d1a2e 35%, #0a1628 55%, #150d24 80%, #1a0e2e 100%)",
+                    }}
+                  >
                     <th
                       className="p-4 text-left text-xs tracking-[0.2em] uppercase text-neutral-400"
                       style={{ fontWeight: 400 }}
@@ -708,9 +1088,11 @@ export default function Home() {
                         className="p-4 text-center"
                       >
                         <div className="flex justify-center">
-                          <ModeBadge
+                          <ModeIconGlass
                             code={mode.code}
                             size={44}
+                            theme="dark"
+                            variant="icon"
                           />
                         </div>
                       </th>
@@ -719,8 +1101,7 @@ export default function Home() {
                 </thead>
                 <tbody>
                   {productLines.map((line) => {
-                    const plColors =
-                      currentGradient.productLines[line.id];
+                    const plColors = currentGradient.productLines[line.id];
                     return (
                       <tr
                         key={line.id}
@@ -735,21 +1116,13 @@ export default function Home() {
                           />
                         </td>
                         {modes.map((mode) => {
-                          const available = matrix[
-                            line.id
-                          ].includes(mode.code);
+                          const available = (matrix[line.id] ?? []).includes(mode.code);
                           return (
-                            <td
-                              key={mode.id}
-                              className="p-4 text-center"
-                            >
-                              {available ? (
+                            <td key={mode.id} className="p-4 text-center">
+                              {available && plColors ? (
                                 <div
                                   className="w-4 h-4 rounded-full mx-auto"
-                                  style={{
-                                    background:
-                                      plColors.gradient,
-                                  }}
+                                  style={{ background: plColors.gradient }}
                                 />
                               ) : (
                                 <div className="w-4 h-4 rounded-full mx-auto bg-neutral-100" />
@@ -760,6 +1133,7 @@ export default function Home() {
                       </tr>
                     );
                   })}
+
                 </tbody>
               </table>
             </motion.div>
@@ -768,7 +1142,7 @@ export default function Home() {
       </section>
 
       {/* ===== Brand Identity Section ===== */}
-      <section className="py-32 px-8 bg-neutral-50">
+      <section className="relative py-32 px-8 bg-neutral-50">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial="hidden"
@@ -1043,7 +1417,7 @@ export default function Home() {
       </section>
 
       {/* ===== Color Palette Section ===== */}
-      <section className="py-32 px-8 bg-neutral-50">
+      <section className="relative py-32 px-8 bg-neutral-50">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial="hidden"
@@ -1079,7 +1453,7 @@ export default function Home() {
       </section>
 
       {/* ===== Character Concept Section (Easter Egg) ===== */}
-      <section className="py-32 px-8">
+      <section className="relative py-32 px-8">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial="hidden"
@@ -1089,7 +1463,7 @@ export default function Home() {
           >
             {/* ƐSおじさん */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-neutral-200">
-              {/* Left — タイトル */}
+              {/* Left — タイトル + 通常 & 謝りバージョン */}
               <motion.div variants={fadeUp} className="bg-white p-12 flex flex-col justify-between">
                 <div>
                   <p className="text-xs tracking-[0.3em] uppercase text-neutral-400 mb-4">
@@ -1102,16 +1476,31 @@ export default function Home() {
                     たまに現れる謎のキャラクター紹介
                   </p>
                 </div>
-                <div className="flex justify-center mt-10">
-                  <motion.img
-                    src={esOjisanImg}
-                    alt="ƐSおじさん"
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                    style={{ height: 260, width: 'auto', objectFit: 'contain' }}
-                  />
+                <div className="flex items-end justify-center gap-8 mt-10">
+                  <div className="flex flex-col items-center gap-3">
+                    <motion.img
+                      src={esOjisanImg}
+                      alt="ƐSおじさん 通常"
+                      initial={{ opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                      style={{ height: 220, width: 'auto', objectFit: 'contain', mixBlendMode: 'multiply' }}
+                    />
+                    <span className="text-[10px] tracking-[0.2em] uppercase text-neutral-300">通常</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-3">
+                    <motion.img
+                      src={esOjisanBWImg}
+                      alt="ƐSおじさ�� 謝りバージョン"
+                      initial={{ opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.4 }}
+                      style={{ height: 220, width: 'auto', objectFit: 'contain', mixBlendMode: 'multiply' }}
+                    />
+                    <span className="text-[10px] tracking-[0.2em] uppercase text-neutral-300">謝り</span>
+                  </div>
                 </div>
               </motion.div>
 
@@ -1130,11 +1519,11 @@ export default function Home() {
                   The Gentle Navigator
                 </p>
                 <p className="text-neutral-500 mb-6" style={{ lineHeight: 2, fontWeight: 300, fontSize: '13px' }}>
-                  寿司職人からホテルのドアマン、プランナー、法人営業、衣装、美容を経て、現在はƐSのドアマンへ。
+                  寿司職人からホテルのドアマン、プランナー、法人営業��衣装、美容を経て、現在はƐSドアマンへ。
                   業界に長くいるにも関わらず、そんな詳しくない風な態度をとる。
                   基本偉そう。でも断らない男。ノラせたらやってくれる。余計な一言が多い。
                   まだ自分が非公認キャラだとは認識していない。
-                  ボランティアでƐS のドアマンをしてくれている。
+                   ボランティアでƐS のドアマンをしてくれている。
                 </p>
                 <div className="flex flex-wrap gap-1.5 mb-6">
                   {[
@@ -1194,7 +1583,7 @@ export default function Home() {
                 <ul className="space-y-2">
                   {[
                     { label: 'イメージ', desc: 'ドアマン' },
-                    { label: 'フラット', desc: '立体感・艶なし' },
+                    { label: 'フラット', desc: '立��感・艶なし' },
                     { label: 'ニュアンス', desc: '親しみやすく柔らかい' },
                     { label: 'ブランドカラー', desc: 'ゴールド×レッド×パープル' },
                     { label: 'シンプル', desc: '最小限の線と面' },
@@ -1208,70 +1597,191 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* ── S.Y.N.A.P.S.E プロフィールカード ── */}
-            <motion.div variants={fadeUp} className="bg-white p-12 mt-px">
-              <div className="flex items-center gap-3 mb-8">
-                <div
-                  className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
-                  style={{ background: '#111' }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <rect x="1" y="1" width="12" height="12" rx="2.5" stroke="#F5C518" strokeWidth="0.8" fill="none" />
-                    <circle cx="4.5" cy="7" r="2" fill="#F5C518" opacity="0.9" />
-                    <circle cx="9.5" cy="7" r="2" fill="#E48E20" opacity="0.85" />
-                  </svg>
-                </div>
-                <span className="text-xs tracking-[0.15em] uppercase text-neutral-400">ƐS Product Mascot — AI Partner</span>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div>
+            {/* 01→02 仕切り線 */}
+            <div className="flex items-center gap-4 px-12 py-5" style={{ borderTop: '1px solid #e5e5e5' }}>
+              <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-300">01</span>
+              <div className="flex-1 h-px bg-neutral-100" />
+            </div>
+
+            {/* ── シナプスAI 01〜09 ── */}
+            {[
+              { num: '02', name: 'シナプスAI 01', label: '02' },
+              { num: '03', name: 'シナプスAI 02', label: '03' },
+              { num: '04', name: 'シナプスAI 03', label: '04' },
+              { num: '05', name: 'シナプスAI 04', label: '05' },
+              { num: '01', name: 'シナプスAI 05', label: '05' },
+              { num: '06', name: 'シナプスAI 06', label: '06' },
+              { num: '07', name: 'シナプスAI 07', label: '07' },
+              { num: '08', name: 'シナプスAI 08', label: '08' },
+              { num: '09', name: 'シナプスAI 09', label: '09' },
+            ].map((char, i) => (
+              <div key={char.num}>
+                {/* 02以降のカード間仕切り線 */}
+                {i > 0 && (
+                  <div className="flex items-center gap-4 px-12 py-5" style={{ borderTop: '1px solid #e5e5e5' }}>
+                    <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-300">{char.label}</span>
+                    <div className="flex-1 h-px bg-neutral-100" />
+                  </div>
+                )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-neutral-200">
+                {/* Left — 画像 */}
+                <motion.div variants={fadeUp} className="bg-white p-12 flex flex-col justify-between">
+                  <div>
+                    <p className="text-xs tracking-[0.3em] uppercase text-neutral-400 mb-4">
+                      AI Partner
+                    </p>
+                    <h2 className="text-4xl tracking-tight text-neutral-900 mb-3" style={{ fontWeight: 300 }}>
+                      {char.name}
+                    </h2>
+                    <p className="text-neutral-400" style={{ fontWeight: 300, fontSize: '14px' }}>
+                      ƐSおじさんの相棒AI
+                    </p>
+                  </div>
+                  <div className="flex justify-center mt-10">
+                    {char.num === '02' ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                      >
+                        <Synapse02 />
+                      </motion.div>
+                    ) : char.num === '03' ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                      >
+                        <Synapse03 />
+                      </motion.div>
+                    ) : char.num === '04' ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                      >
+                        <Synapse04 />
+                      </motion.div>
+                    ) : char.num === '05' ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                      >
+                        <Synapse05 />
+                      </motion.div>
+                    ) : char.num === '01' ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                      >
+                        <Synapse01 height={260} />
+                      </motion.div>
+                    ) : char.num === '06' ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                      >
+                        <Synapse06 />
+                      </motion.div>
+                    ) : char.num === '07' ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                      >
+                        <Synapse07 />
+                      </motion.div>
+                    ) : char.num === '08' ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                      >
+                        <Synapse08 height={220} />
+                      </motion.div>
+                    ) : char.num === '09' ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                      >
+                        <Synapse09 height={260} />
+                      </motion.div>
+                    ) : (
+                      <div
+                        className="flex items-center justify-center rounded-2xl"
+                        style={{
+                          width: 180, height: 260,
+                          background: 'linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)',
+                          border: '1px dashed #d4d4d4',
+                        }}
+                      >
+                        <span className="text-neutral-300 tracking-widest" style={{ fontSize: 48, fontWeight: 200 }}>
+                          {char.num}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+
+                {/* Right — プロフィール */}
+                <motion.div variants={fadeUp} className="bg-white p-12 flex flex-col justify-center">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div
+                      className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
+                      style={{ background: '#111' }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <rect x="1" y="1" width="12" height="12" rx="2.5" stroke="#F5C518" strokeWidth="0.8" fill="none" />
+                        <circle cx="4.5" cy="7" r="2" fill="#F5C518" opacity="0.9" />
+                        <circle cx="9.5" cy="7" r="2" fill="#E48E20" opacity="0.85" />
+                      </svg>
+                    </div>
+                    <span className="text-xs tracking-[0.15em] uppercase text-neutral-400">ƐS Product Mascot — AI Partner</span>
+                  </div>
                   <h3 className="text-2xl tracking-tight text-neutral-800 mb-1" style={{ fontWeight: 500 }}>
-                    S.Y.N.A.P.S.E (シナプス)
+                    {char.name}
                   </h3>
                   <p className="text-xs tracking-[0.08em] uppercase mb-5 text-neutral-400" style={{ fontWeight: 400 }}>
-                    Synthetic Yielding Neural Adaptive Processing System Engine
+                    Coming Soon
                   </p>
-                  <p className="text-neutral-500 mb-6" style={{ lineHeight: 2, fontWeight: 300, fontSize: '13px' }}>
-                    見た目は昭和のおもちゃのロボ。少し頼りない雰囲気を醸し出しているが、
-                    その中身は高性能AI。
-                    ƐSおじさんの行動パターンは大体読めており、次の一手を既に把握済み。
-                    コーヒータイムが好きで、処理が早朝イチは特に機嫌が良い。
-                    自分が非公認キャラだということには、うっすら気づいている。
+                  <p className="text-neutral-300 mb-6" style={{ lineHeight: 2, fontWeight: 300, fontSize: '13px' }}>
+                    —
                   </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {[
-                      { label: 'レトロ外観', bg: 'bg-slate-50', text: 'text-slate-500' },
-                      { label: '超高性能', bg: 'bg-amber-50', text: 'text-amber-600' },
-                      { label: 'コーヒー好き', bg: 'bg-orange-50', text: 'text-orange-500' },
-                      { label: 'おじさん解析済', bg: 'bg-indigo-50', text: 'text-indigo-500' },
-                    ].map(tag => (
-                      <span key={tag.label} className={`px-3 py-1 rounded-full text-[10px] tracking-wide ${tag.bg} ${tag.text}`}>
-                        {tag.label}
-                      </span>
-                    ))}
+                  <div className="pt-5 border-t border-neutral-100">
+                    <p className="text-xs tracking-[0.2em] uppercase text-neutral-400 mb-3">Spec</p>
+                    <ul className="space-y-1.5">
+                      {[
+                        { label: 'Model', desc: '—' },
+                        { label: 'Height', desc: '—' },
+                        { label: 'Specialty', desc: '—' },
+                        { label: 'Favorite', desc: '—' },
+                        { label: 'Weak point', desc: '—' },
+                        { label: 'Catchphrase', desc: '—' },
+                      ].map(item => (
+                        <li key={item.label} className="flex items-start gap-2">
+                          <span className="text-neutral-800 text-xs" style={{ fontWeight: 500, minWidth: '5rem' }}>{item.label}</span>
+                          <span className="text-neutral-400 text-xs" style={{ fontWeight: 300 }}>{item.desc}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </div>
-                <div className="pt-5 border-t border-neutral-100 md:border-t-0 md:pt-0 md:border-l md:pl-12">
-                  <p className="text-xs tracking-[0.2em] uppercase text-neutral-400 mb-3">Spec</p>
-                  <ul className="space-y-1.5">
-                    {[
-                      { label: 'Model', desc: 'SYNAPSE OS v2.1' },
-                      { label: 'Height', desc: 'ƐSおじさんより少し小さめ' },
-                      { label: 'Eyes', desc: '左:ゴールドLED / 右:アンバーLED（非対称）' },
-                      { label: 'Specialty', desc: 'ƐSおじさんの行動予測（精度:推定99.3%）' },
-                      { label: 'Favorite', desc: 'コーヒー（ブラック・クレマ厚め）' },
-                      { label: 'Weak point', desc: 'アンテナが少し曲がっている' },
-                      { label: 'Catchphrase', desc: '…既に計算済みです' },
-                    ].map(item => (
-                      <li key={item.label} className="flex items-start gap-2">
-                        <span className="text-neutral-800 text-xs" style={{ fontWeight: 500, minWidth: '5rem' }}>{item.label}</span>
-                        <span className="text-neutral-500 text-xs" style={{ fontWeight: 300 }}>{item.desc}</span>
-                      </li>
-                    ))}
-                  </ul>
+                </motion.div>
                 </div>
               </div>
-            </motion.div>
+            ))}
 
             {/* Signature strip */}
             <motion.div variants={fadeUp} className="mt-px bg-neutral-900 p-8 flex items-center justify-end">

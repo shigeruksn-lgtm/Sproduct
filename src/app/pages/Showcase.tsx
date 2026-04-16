@@ -66,7 +66,7 @@ function HeroSection() {
   const y = useTransform(scrollYProgress, [0, 0.8], [0, 80]);
 
   return (
-    <section ref={ref} className="relative h-[200vh]">
+    <section ref={ref} className="relative h-[200vh]" style={{ position: 'relative' }}>
       <motion.div
         style={{ opacity, scale, y }}
         className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden"
@@ -505,7 +505,7 @@ function IntroSection() {
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
 
   return (
-    <section ref={ref} className="relative py-40 px-8 bg-white">
+    <section ref={ref} className="relative py-40 px-8 bg-white" style={{ position: 'relative' }}>
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -573,7 +573,7 @@ function ProductLineSection({
   const isEven = index % 2 === 0;
 
   return (
-    <section ref={ref} className="relative bg-white">
+    <section ref={ref} className="relative bg-white" style={{ position: 'relative' }}>
       {/* Divider */}
       <div className="max-w-6xl mx-auto px-8">
         <div className="h-px bg-neutral-100" />
@@ -822,7 +822,7 @@ function ClosingSection() {
 
 export default function Showcase() {
   return (
-    <div className="bg-white" style={{ fontFamily: 'DM Sans, sans-serif' }}>
+    <div className="bg-white relative" style={{ fontFamily: 'DM Sans, sans-serif' }}>
       <HeroSection />
       <IntroSection />
       {productLines.map((pl, i) => (

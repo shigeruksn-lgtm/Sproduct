@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { GridIcon } from '../components/GridIcon';
 import { Link } from 'react-router';
-import { ArrowRight, Monitor, Smartphone, Layout, Building2, Users, Calendar } from 'lucide-react';
+import { ArrowRight, Monitor, Smartphone, Layout, Building2, Users, Calendar, BarChart3 } from 'lucide-react';
 
 const brandGrad = 'linear-gradient(135deg, #F5C518 0%, #C0392B 50%, #3C2562 100%)';
 const textGradStyle: React.CSSProperties = {
@@ -47,9 +47,30 @@ const systemPages = [
     status: 'Live',
   },
   {
-    title: 'マイページ（スマホ）',
+    title: '分析管理',
+    desc: '売上・顧客・稼働状況などの各種データを集計し、グラフや表でレポート出力・分析。',
+    to: '/home/analytics',
+    icon: BarChart3,
+    status: 'Live',
+  },
+  {
+    title: '会場別売上一覧',
+    desc: '会場・施設ごとの売上実績・稼働率の推移を日別または月別で確認。',
+    to: '/home/analytics/sales-venue',
+    icon: Building2,
+    status: 'Live',
+  },
+  {
+    title: 'CS Mobile',
     desc: 'お客様向けスマートフォン画面。プロフィール・予約確認・担当者連絡をモバイルUIで提供。',
     to: '/mypage',
+    icon: Smartphone,
+    status: 'Live',
+  },
+  {
+    title: 'ES Mobile',
+    desc: '従業員向けスマートフォン画面。スケジュール管理・顧客管理をモバイルUIで提供。',
+    to: '/system/es-mobile',
     icon: Smartphone,
     status: 'Live',
   },
@@ -94,7 +115,7 @@ export default function System() {
       </section>
 
       {/* System Pages Grid */}
-      <section className="max-w-4xl mx-auto px-8 pb-28">
+      <section className="relative max-w-4xl mx-auto px-8 pb-28">
         <motion.div
           initial="hidden"
           whileInView="visible"
